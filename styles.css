@@ -1394,32 +1394,38 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
 }
 .vs-login-input--with-toggle {
-  padding-right: 7.5rem;
+  padding-right: 3rem;
 }
 .vs-login-toggle-pass {
   position: absolute;
-  right: 10px;
+  right: 4px;
   top: 50%;
   transform: translateY(-50%);
   margin: 0;
-  padding: 6px 4px;
+  padding: 8px;
   border: 0;
+  border-radius: 8px;
   background: transparent;
   font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--arkas-blue);
+  color: var(--ink-3);
   cursor: pointer;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
 }
 .vs-login-toggle-pass:hover {
   color: var(--arkas-navy);
-  text-decoration: underline;
+  background: rgba(16, 44, 87, 0.06);
+  text-decoration: none;
 }
 .vs-login-toggle-pass:focus-visible {
   outline: 2px solid var(--arkas-blue);
   outline-offset: 2px;
-  border-radius: 4px;
+}
+.vs-login-eye-svg {
+  display: block;
+  flex-shrink: 0;
 }
 .vs-login-submit {
   width: 100%;
