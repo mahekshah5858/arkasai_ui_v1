@@ -53,31 +53,31 @@ function PortfolioView({ projects, goToProject, goToIntake, palette }) {
         <VerdictRollup counts={counts} spend={spendByVerdict} totalSpend={totalSpend} palette={palette} />
       </section>
 
-      <div className="vs-grid-2">
-        <section className="vs-section">
-          <div className="vs-section-title">
-            <span className="vs-eyebrow">Portfolio Map</span>
-            <h2>Health and trajectory</h2>
-            <p className="vs-section-sub">
-              Position = current score · Horizontal = trajectory
-              over evaluation history · Bubble size = approved budget
-            </p>
-          </div>
+      <section className="vs-section">
+        <div className="vs-section-title">
+          <span className="vs-eyebrow">Portfolio Map</span>
+          <h2>Health and trajectory</h2>
+          <p className="vs-section-sub">
+            Position = current score · Horizontal = trajectory
+            over evaluation history · Bubble size = approved budget
+          </p>
+        </div>
+        <div className="vs-portfolio-chart-wrap">
           <PortfolioBubbleChart
             projects={projects}
             palette={palette}
             goToProject={goToProject}
           />
-        </section>
+        </div>
+      </section>
 
-        <section className="vs-section">
-          <div className="vs-section-title">
-            <span className="vs-eyebrow">Portfolio Intelligence</span>
-            <h2>What needs your attention</h2>
-          </div>
-          <PortfolioIntelligence goToProject={goToProject} palette={palette} />
-        </section>
-      </div>
+      <section className="vs-section">
+        <div className="vs-section-title">
+          <span className="vs-eyebrow">Portfolio Intelligence</span>
+          <h2>What needs your attention</h2>
+        </div>
+        <PortfolioIntelligence goToProject={goToProject} palette={palette} />
+      </section>
 
       <section className="vs-section">
         <div className="vs-section-title">
@@ -145,7 +145,7 @@ function PortfolioIntelligence({ goToProject, palette }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+    <div className="vs-portfolio-intel-grid">
       {intel.risks.map((risk) => {
         const isRed = risk.severity === 'red';
         const accentColor = isRed ? palette.kill : palette.rescue;
@@ -155,6 +155,7 @@ function PortfolioIntelligence({ goToProject, palette }) {
         return (
           <div
             key={risk.id}
+            className="vs-portfolio-intel-card"
             style={{
               borderTop: '0.5px solid currentColor',
               borderBottom: '0.5px solid currentColor',
@@ -166,6 +167,7 @@ function PortfolioIntelligence({ goToProject, palette }) {
             }}
           >
             <div
+              className="vs-portfolio-intel-card__head"
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
@@ -239,8 +241,8 @@ function PortfolioIntelligence({ goToProject, palette }) {
 
 function PortfolioBubbleChart({ projects, palette, goToProject }) {
 
-  const W = 720;
-  const H = 400;
+  const W = 1000;
+  const H = 420;
   const PAD = { top: 40, right: 20, bottom: 50, left: 52 };
 
   const chartW = W - PAD.left - PAD.right;
@@ -349,13 +351,13 @@ function PortfolioBubbleChart({ projects, palette, goToProject }) {
   const [hovered, setHovered] = React.useState(null);
 
   return (
-    <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+    <div className="vs-portfolio-chart-scroll">
       <svg
         viewBox={`0 0 ${W} ${H}`}
         width="100%"
         height="auto"
         preserveAspectRatio="xMidYMid meet"
-        style={{ display: 'block', maxWidth: W }}
+        style={{ display: 'block', maxWidth: '100%' }}
       >
         <g transform={`translate(${PAD.left},${PAD.top})`}>
 

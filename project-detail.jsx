@@ -169,27 +169,25 @@ function ProjectDetailView({ projects, setProjects, projectId, initialOpenSignal
         />
       </header>
 
-      <div className="vs-detail-grid">
-        <section className="vs-section">
-          <div className="vs-section-title">
-            <span className="vs-eyebrow">Executive Summary</span>
-            <h2>At a glance</h2>
-          </div>
-          <ExecutiveCard
-            project={project}
-            palette={palette}
-            onSignalClick={scrollToSignal}
-          />
-        </section>
+      <section className="vs-section">
+        <div className="vs-section-title">
+          <span className="vs-eyebrow">Governance Intelligence</span>
+          <h2>Four-category breakdown</h2>
+        </div>
+        <Radar project={project} taxonomy={PD_TAX} palette={palette} />
+      </section>
 
-        <section className="vs-section">
-          <div className="vs-section-title">
-            <span className="vs-eyebrow">Governance Intelligence</span>
-            <h2>Four-category breakdown</h2>
-          </div>
-          <Radar project={project} taxonomy={PD_TAX} palette={palette} />
-        </section>
-      </div>
+      <section className="vs-section">
+        <div className="vs-section-title">
+          <span className="vs-eyebrow">Executive Summary</span>
+          <h2>At a glance</h2>
+        </div>
+        <ExecutiveCard
+          project={project}
+          palette={palette}
+          onSignalClick={scrollToSignal}
+        />
+      </section>
 
       <section className="vs-section">
         <div className="vs-section-title">
@@ -366,34 +364,18 @@ function ExecutiveCard({ project, palette, onSignalClick }) {
     v === 'kill'       ? palette.kill :
                          palette.rescue;
 
-  // Row builder — reused for all 4 rows
-  function Row({ label, labelColor, children, isLast }) {
+  function ExecBox({ label, accent, children }) {
     return (
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '9rem 1fr',
-        gap: '0.5rem 1.5rem',
-        padding: '1rem 0',
-        borderBottom: isLast ? 'none' : '1px solid currentColor',
-        alignItems: 'start',
-      }}>
-        <div style={{
-          fontSize: '0.65rem',
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          opacity: 0.45,
-          color: labelColor || 'inherit',
-          paddingTop: '0.2rem',
-          lineHeight: 1.4,
-        }}>
+      <div
+        className="vs-exec-summary-card"
+        style={{
+          borderLeft: accent ? `3px solid ${accent}` : '3px solid color-mix(in oklch, var(--line) 70%, transparent)',
+        }}
+      >
+        <div className="vs-exec-summary-card__label">
           {label}
         </div>
-        <div style={{
-          fontSize: '0.875rem',
-          lineHeight: 1.7,
-          opacity: 0.85,
-        }}>
+        <div className="vs-exec-summary-card__body">
           {children}
         </div>
       </div>
@@ -401,40 +383,36 @@ function ExecutiveCard({ project, palette, onSignalClick }) {
   }
 
   return (
-    <div style={{ opacity: 0.95 }}>
+    <div className="vs-exec-summary-grid">
 
-      {/* Row 1 — About this programme */}
-      <Row label={'About this\nprogramme'}>
+      <ExecBox label="About this programme">
         {card.about}
-      </Row>
+      </ExecBox>
 
-      {/* Row 2 — What is happening */}
-      <Row label={'What is\nhappening'}>
+      <ExecBox label="What is happening">
         {card.happening}
-      </Row>
+      </ExecBox>
 
-      {/* Row 3 — Why it matters */}
-      <Row label={'Why it\nmatters'} labelColor={verdictColor}>
+      <ExecBox label="Why it matters" accent={verdictColor}>
         {card.matters.text}
         {(card.matters.signals || []).map((name) => (
           <SignalChip key={name} name={name} isAction={false} />
         ))}
-      </Row>
+      </ExecBox>
 
-      {/* Row 4 — What must happen */}
-      <Row label={'What must\nhappen'} labelColor={palette.accelerate} isLast={true}>
+      <ExecBox label="What must happen" accent={palette.accelerate}>
         {card.must_happen.text}
         {card.must_happen.signal && (
           <SignalChip name={card.must_happen.signal} isAction={true} />
         )}
-      </Row>
+      </ExecBox>
 
     </div>
   );
 }
 
 function Radar({ project, taxonomy, palette }) {
-  const SIZE = 440;
+  const SIZE = 560;
   const cx = SIZE / 2, cy = SIZE / 2;
   const R = SIZE * 0.30;
   const n = taxonomy.length;
@@ -453,7 +431,7 @@ function Radar({ project, taxonomy, palette }) {
   const v = project.verdict;
   return (
     <div className="vs-radar-wrap">
-      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height="auto" style={{ maxWidth: SIZE, overflow: 'visible' }}>
+      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height="auto" style={{ maxWidth: 'min(560px, 100%)', overflow: 'visible' }}>
         {[0.25, 0.5, 0.75, 1].map((p) => (
           <circle key={p} cx={cx} cy={cy} r={R * p} fill="none" stroke="currentColor" opacity={p === 1 ? 0.25 : 0.08} strokeWidth="0.5" />
         ))}

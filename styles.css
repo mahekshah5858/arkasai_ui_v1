@@ -325,6 +325,29 @@ button { font-family: inherit; cursor: pointer; }
 .vs-grid-2 > .vs-section:first-child { padding-right: 48px; border-right: 1px solid var(--line); }
 .vs-grid-2 > .vs-section:last-child { padding-left: 48px; }
 
+.vs-portfolio-chart-wrap {
+  width: 100%;
+  max-width: 100%;
+}
+.vs-portfolio-chart-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.vs-portfolio-intel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+.vs-portfolio-intel-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 /* ── Verdict rollup cards ────────────────────────────────── */
 .vs-rollup {
   display: grid;
@@ -833,7 +856,43 @@ button { font-family: inherit; cursor: pointer; }
 }
 .vs-detail-spark { color: var(--ink); }
 
-.vs-radar-wrap { display: flex; justify-content: center; padding: 16px 0; }
+.vs-radar-wrap { display: flex; justify-content: center; width: 100%; padding: 16px 0; }
+
+.vs-exec-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+.vs-exec-summary-card {
+  min-width: 0;
+  box-sizing: border-box;
+  border: 0.5px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem 1.15rem;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  height: 100%;
+}
+.vs-exec-summary-card__label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.45;
+  color: var(--ink-2);
+  line-height: 1.35;
+}
+.vs-exec-summary-card__body {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  opacity: 0.85;
+  color: var(--ink);
+  flex: 1;
+  text-wrap: pretty;
+}
 
 /* ── Signal table ────────────────────────────────────────── */
 .vs-signals { display: flex; flex-direction: column; gap: 24px; }
@@ -1286,6 +1345,16 @@ button { font-family: inherit; cursor: pointer; }
   .vs-grid-2 > .vs-section:last-child,
   .vs-detail-grid > .vs-section:last-child {
     padding-left: 0;
+  }
+  .vs-portfolio-intel-grid {
+    grid-template-columns: 1fr;
+  }
+  .vs-portfolio-intel-card__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .vs-exec-summary-grid {
+    grid-template-columns: 1fr;
   }
   .vs-hero, .vs-detail-hero { grid-template-columns: 1fr; gap: 32px; }
   .vs-hero-right { border-left: 0; padding-left: 0; flex-direction: row; flex-wrap: wrap; gap: 32px; }
