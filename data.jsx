@@ -863,7 +863,7 @@ const RAW_PROJECTS = [
           people:   null,
           strategy: 'Commission the independent ROI validation with the finance team before the next capital review. This is the only remaining action in the strategy bucket.',
         },
-        changes:['All buckets above 3.0. Pen test completed December 2025.','Score crosses Accelerate threshold at 3.8.'],
+        changes:['All four buckets above 90. Pen test completed December 2025.','Score 98. Accelerate verdict confirmed.'],
       },
     ],
     snapshotDates: ['Apr 2025', 'Jul 2025', 'Oct 2025', 'Apr 2026'],
@@ -1127,7 +1127,7 @@ const RAW_PROJECTS = [
           people:   'All people signals failing. The legal team was not involved in building a system they are expected to use. Conduct a legal team impact assessment before making any wind-down or continuation decision.',
           strategy: 'No legal review, no AIA, no MRM, and no bias testing on a system that analyses legal contracts. Do not deploy. Initiate a formal wind-down plan and capital recovery assessment.',
         },
-        changes:['Overall score below 2.0. Decision moves to Kill.','Four rescue flags over 10 months. No action taken.'],
+        changes:['Score 39. Decision moves to Kill.','Four rescue flags over 10 months. No action taken.'],
       },
     ],
     snapshotDates: ['Jun 2025', 'Aug 2025', 'Oct 2025', 'Apr 2026'],
@@ -1176,7 +1176,7 @@ const RAW_PROJECTS = [
     spend: 2.8,
     started: 'Apr 2025',
     headline:
-      'RegRadar shows an overall score of 3.3 which masks three critical Red signals in Strategy. DORA deadline is 8 weeks away and no regulatory contact has been made.',
+      'RegRadar scores 88 — the highest in the portfolio — but carries a Rescue verdict. Three critical regulatory signals are Red and the Strategy bucket has a governance FAIL. DORA deadline is 8 weeks away.',
     description:
       'Automated AI-powered DORA compliance monitoring and reporting. Replacing manual quarterly reporting with continuous automated assessment. Regulatory deadline: June 2026.',
     programme_manager: 'Lisa Thompson',
@@ -1260,7 +1260,7 @@ const RAW_PROJECTS = [
           people:   'Start BAU overlap engagement this week. The KT plan is documented but engagement has not started — with 8 weeks to deadline this is an urgent gap.',
           strategy: 'CRO Marcus Webb and General Counsel must initiate formal contact with the Federal Reserve and OCC this week. This single action unblocks the legal review, the AIA, and the interpretation confirmation — and removes the FAIL flag from this bucket. Every week of inaction reduces the time available to act on the regulatory response.',
         },
-        changes:['Score of 3.3 masks 3 critical Red signals in Strategy.','No regulator contact made in 12 months. DORA deadline 8 weeks away.','Programme tracking 2 weeks late. 3 open ICT questions. No legal counsel engaged.'],
+        changes:['Score 88 but Strategy bucket has governance FAIL from 3 critical Red signals.','No regulator contact made in 12 months. DORA deadline 8 weeks away.','Programme tracking 2 weeks late. 3 open ICT questions. No legal counsel engaged.'],
       },
     ],
     snapshotDates: ['Apr 2025', 'Jul 2025', 'Oct 2025', 'Apr 2026'],
@@ -1276,7 +1276,7 @@ const RAW_PROJECTS = [
       tfeas: 'document', uadopt: 'team', ucvalid: 'document', airisk: 'team',
     },
     exec_summary: {
-      cxo_note: 'CRO Marcus Webb and General Counsel must initiate formal regulator contact this week. Score of 3.3 does not reflect the severity of regulatory exposure at signal level.',
+      cxo_note: 'RegRadar scores 88 — the highest in the portfolio — but carries a Rescue verdict. The Strategy bucket has a governance FAIL. CRO Marcus Webb and General Counsel must initiate formal regulator contact this week.',
       actions: [
         { who: 'CRO Marcus Webb', what: 'Initiate formal engagement with Federal Reserve and OCC. Confirm DORA interpretation.', when: 'This week' },
         { who: 'General Counsel', what: 'Engage legal counsel on the 3 open ICT framework interpretation questions.', when: 'Within 7 days' },
@@ -1396,7 +1396,7 @@ const RAW_PROJECTS = [
           people:   'Start BAU team training this week — it is the only people action remaining. CHRO Linda Park\'s 100% attendance is the programme\'s strongest governance signal. Protect it through go-live.',
           strategy: 'Commission the independent ROI validation and external budget benchmarking before the next capital review. Both are outstanding for multiple cycles — close them before go-live.',
         },
-        changes:['Kill to Accelerate in 12 months.','CHRO Linda Park 100% attendance confirmed via Calendar every session since July 2025.','All 4 buckets above 3.0. Score crosses Accelerate at 3.6.'],
+        changes:['Kill to Accelerate in 12 months.','CHRO Linda Park 100% attendance confirmed via Calendar every session since July 2025.','All four buckets above 90. Score 96. Accelerate verdict confirmed.'],
       },
     ],
     snapshotDates: ['Apr 2025', 'Jul 2025', 'Oct 2025', 'Apr 2026'],
@@ -1493,7 +1493,7 @@ const RAW_PROJECTS = [
       tfeas: 'document', uadopt: 'pending', ucvalid: 'document', airisk: 'pending',
     },
     exec_summary: {
-      cxo_note: 'Answer 5 critical questions to reach score 2.9. Connect Google Calendar and SonarCloud for continuous scoring.',
+      cxo_note: 'Answer the 5 critical unanswered questions to improve this programme\'s score. Connect Google Calendar and SonarCloud for continuous live scoring.',
       actions: [
         { who: 'Thomas Reeves (COO)', what: 'Confirm programme board and chair role. Answer the pending question on the platform.', when: 'This week' },
         { who: 'Sarah Mitchell (PM)', what: 'Upload formal mandate document and confirm signatories.', when: 'This week' },

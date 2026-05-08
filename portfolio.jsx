@@ -7,7 +7,7 @@ function signalCount(taxonomy) {
   return taxonomy.reduce((n, tx) => n + (tx.signals ? tx.signals.length : 0), 0);
 }
 
-function PortfolioView({ projects, goToProject, goToThresholds, goToTaxonomy, goToSettings, goToIntake, palette }) {
+function PortfolioView({ projects, goToProject, goToIntake, palette }) {
   const [filter, setFilter] = React.useState('all'); // all | accelerate | rescue | kill
   const [sort, setSort] = React.useState('score'); // score | spend | name
 
@@ -101,28 +101,6 @@ function PortfolioView({ projects, goToProject, goToThresholds, goToTaxonomy, go
         </div>
         <ProjectList projects={filtered} goToProject={goToProject} palette={palette} />
       </section>
-
-      <footer className="vs-footer">
-        <div>
-          Verity Signal · Meridian Financial Group ·{' '}
-          {projects.length} projects · 4 Governance Intelligence categories · 34 signals
-        </div>
-        <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.4rem' }}>
-          {[
-            { label: 'Intelligence Configurations', fn: goToThresholds },
-            { label: 'Governance Intelligence', fn: goToTaxonomy },
-            { label: 'Settings', fn: goToSettings },
-          ].map(({ label, fn }) => (
-            <button key={label} onClick={fn} style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: '0.78rem', opacity: 0.45,
-              textDecoration: 'underline', color: 'inherit', padding: 0,
-            }}>
-              {label}
-            </button>
-          ))}
-        </div>
-      </footer>
     </div>
   );
 }

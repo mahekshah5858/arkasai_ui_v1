@@ -20,6 +20,32 @@ const PALETTES = {
   },
 };
 
+function AppShellFooter({ projectCount, goToThresholds, goToTaxonomy, goToSettings }) {
+  return (
+    <footer className="vs-footer">
+      <div>
+        Verity Signal · Meridian Financial Group ·{' '}
+        {projectCount} projects · 4 Governance Intelligence categories · 34 signals
+      </div>
+      <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.4rem' }}>
+        {[
+          { label: 'Intelligence Configurations', fn: goToThresholds },
+          { label: 'Governance Intelligence', fn: goToTaxonomy },
+          { label: 'Settings', fn: goToSettings },
+        ].map(({ label, fn }) => (
+          <button key={label} onClick={fn} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontSize: '0.78rem', opacity: 0.45,
+            textDecoration: 'underline', color: 'inherit', padding: 0,
+          }}>
+            {label}
+          </button>
+        ))}
+      </div>
+    </footer>
+  );
+}
+
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [route, setRoute] = React.useState({ name: 'landing' });
@@ -136,8 +162,6 @@ function App() {
     window.VS.resetDemo = resetDemo;
   }, [addDemoProject, resetDemo]);
 
-  const navProps = { goToThresholds, goToTaxonomy, goToSettings };
-
   const main =
     route.name === 'landing' ? (
       <LandingPageView onEnterApp={goToPortfolio} landingHash={landingHash} />
@@ -149,7 +173,6 @@ function App() {
         goToProject={goToProject}
         goToIntake={goToIntake}
         palette={palette}
-        {...navProps}
       />
     ) : route.name === 'project' ? (
       <ProjectDetailView
@@ -181,16 +204,35 @@ function App() {
         goToProject={goToProject}
         goToIntake={goToIntake}
         palette={palette}
-        {...navProps}
       />
     );
+
+  const showAppFooter =
+    route.name !== 'landing' &&
+    route.name !== 'login' &&
+    protectedRouteNames.has(route.name) &&
+    isVerityAuthed();
 
   return (
     <div className="vs-app">
       {route.name !== 'landing' && (
         <AppTopNav goToLanding={goToLanding} enterVerity={goToPortfolio} />
       )}
-      {route.name === 'landing' ? main : <div className="vs-shell">{main}</div>}
+      {route.name === 'landing' ? (
+        main
+      ) : (
+        <div className="vs-shell">
+          {main}
+          {showAppFooter ? (
+            <AppShellFooter
+              projectCount={projects.length}
+              goToThresholds={goToThresholds}
+              goToTaxonomy={goToTaxonomy}
+              goToSettings={goToSettings}
+            />
+          ) : null}
+        </div>
+      )}
       {route.name !== 'landing' && route.name !== 'login' && (
       <TweaksPanel title="Tweaks">
         <TweakSection label="Color treatment" />
