@@ -169,25 +169,31 @@ function ProjectDetailView({ projects, setProjects, projectId, initialOpenSignal
         />
       </header>
 
-      <section className="vs-section">
-        <div className="vs-section-title">
-          <span className="vs-eyebrow">Governance Intelligence</span>
-          <h2>Four-category breakdown</h2>
-        </div>
-        <Radar project={project} taxonomy={PD_TAX} palette={palette} />
-      </section>
+      <div className="vs-detail-grid">
+        <section className="vs-section vs-detail-grid-section">
+          <div className="vs-section-title vs-detail-grid-section-title">
+            <span className="vs-eyebrow">Executive Summary</span>
+            <h2>At a glance</h2>
+          </div>
+          <div className="vs-executive-panel">
+            <ExecutiveCard
+              project={project}
+              palette={palette}
+              onSignalClick={scrollToSignal}
+            />
+          </div>
+        </section>
 
-      <section className="vs-section">
-        <div className="vs-section-title">
-          <span className="vs-eyebrow">Executive Summary</span>
-          <h2>At a glance</h2>
-        </div>
-        <ExecutiveCard
-          project={project}
-          palette={palette}
-          onSignalClick={scrollToSignal}
-        />
-      </section>
+        <section className="vs-section vs-detail-grid-section">
+          <div className="vs-section-title vs-detail-grid-section-title">
+            <span className="vs-eyebrow">Governance Intelligence</span>
+            <h2>Four-category breakdown</h2>
+          </div>
+          <div className="vs-radar-panel">
+            <Radar project={project} taxonomy={PD_TAX} palette={palette} />
+          </div>
+        </section>
+      </div>
 
       <section className="vs-section">
         <div className="vs-section-title">
@@ -321,7 +327,7 @@ function ExecutiveCard({ project, palette, onSignalClick }) {
   // Fallback if no executive_card data
   if (!card) {
     return (
-      <div style={{ opacity:0.6, fontStyle:'italic', fontSize:'0.85rem' }}>
+      <div className="vs-executive-panel-fallback">
         {project.headline}
       </div>
     );
@@ -364,18 +370,17 @@ function ExecutiveCard({ project, palette, onSignalClick }) {
     v === 'kill'       ? palette.kill :
                          palette.rescue;
 
-  function ExecBox({ label, accent, children }) {
+  // Row — label above body (clearer than a cramped two-column label strip)
+  function Row({ label, labelColor, children, isLast }) {
     return (
-      <div
-        className="vs-exec-summary-card"
-        style={{
-          borderLeft: accent ? `3px solid ${accent}` : '3px solid color-mix(in oklch, var(--line) 70%, transparent)',
-        }}
-      >
-        <div className="vs-exec-summary-card__label">
+      <div className={`vs-executive-block${isLast ? ' vs-executive-block--last' : ''}`}>
+        <div
+          className="vs-executive-block__label"
+          style={labelColor ? { color: labelColor } : undefined}
+        >
           {label}
         </div>
-        <div className="vs-exec-summary-card__body">
+        <div className="vs-executive-block__body">
           {children}
         </div>
       </div>
@@ -383,36 +388,36 @@ function ExecutiveCard({ project, palette, onSignalClick }) {
   }
 
   return (
-    <div className="vs-exec-summary-grid">
+    <div className="vs-executive-panel-inner">
 
-      <ExecBox label="About this programme">
+      <Row label="About this programme">
         {card.about}
-      </ExecBox>
+      </Row>
 
-      <ExecBox label="What is happening">
+      <Row label="What is happening">
         {card.happening}
-      </ExecBox>
+      </Row>
 
-      <ExecBox label="Why it matters" accent={verdictColor}>
+      <Row label="Why it matters" labelColor={verdictColor}>
         {card.matters.text}
         {(card.matters.signals || []).map((name) => (
           <SignalChip key={name} name={name} isAction={false} />
         ))}
-      </ExecBox>
+      </Row>
 
-      <ExecBox label="What must happen" accent={palette.accelerate}>
+      <Row label="What must happen" labelColor={palette.accelerate} isLast={true}>
         {card.must_happen.text}
         {card.must_happen.signal && (
           <SignalChip name={card.must_happen.signal} isAction={true} />
         )}
-      </ExecBox>
+      </Row>
 
     </div>
   );
 }
 
 function Radar({ project, taxonomy, palette }) {
-  const SIZE = 560;
+  const SIZE = 440;
   const cx = SIZE / 2, cy = SIZE / 2;
   const R = SIZE * 0.30;
   const n = taxonomy.length;
@@ -422,51 +427,135 @@ function Radar({ project, taxonomy, palette }) {
     const r = (v / 100) * R;
     return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
   };
-  const labelFor = (i) => {
-    const a = angleFor(i);
-    const r = R + 24;
-    return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
-  };
+  /** Outer-axis corner + label stack: name above score, sitting just past each diamond corner. */
+  function cornerLabelLayout(a) {
+    const deg = ((a * 180) / Math.PI + 360) % 360;
+    const pad = 22;
+    const stack = 15;
+    if (deg >= 225 && deg < 315) {
+      return {
+        nameX: cx,
+        nameY: cy - R - pad - stack,
+        scoreX: cx,
+        scoreY: cy - R - pad,
+        ta: 'middle',
+      };
+    }
+    if (deg >= 315 || deg < 45) {
+      return {
+        nameX: cx + R + pad,
+        nameY: cy - stack / 2,
+        scoreX: cx + R + pad,
+        scoreY: cy + stack / 2,
+        ta: 'start',
+      };
+    }
+    if (deg >= 45 && deg < 135) {
+      return {
+        nameX: cx,
+        nameY: cy + R + pad,
+        scoreX: cx,
+        scoreY: cy + R + pad + stack,
+        ta: 'middle',
+      };
+    }
+    return {
+      nameX: cx - R - pad,
+      nameY: cy - stack / 2,
+      scoreX: cx - R - pad,
+      scoreY: cy + stack / 2,
+      ta: 'end',
+    };
+  }
   const polyPts = taxonomy.map((tx, i) => pointFor(i, project.scores[tx.id]).join(',')).join(' ');
   const v = project.verdict;
   return (
-    <div className="vs-radar-wrap">
-      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height="auto" style={{ maxWidth: 'min(560px, 100%)', overflow: 'visible' }}>
-        {[0.25, 0.5, 0.75, 1].map((p) => (
-          <circle key={p} cx={cx} cy={cy} r={R * p} fill="none" stroke="currentColor" opacity={p === 1 ? 0.25 : 0.08} strokeWidth="0.5" />
-        ))}
-        <circle cx={cx} cy={cy} r={R * 0.68} fill="none" stroke={palette.accelerate} opacity="0.25" strokeDasharray="2 3" strokeWidth="0.6" />
-        <circle cx={cx} cy={cy} r={R * 0.42} fill="none" stroke={palette.rescue} opacity="0.25" strokeDasharray="2 3" strokeWidth="0.6" />
-        {taxonomy.map((tx, i) => {
-          const [x, y] = pointFor(i, 100);
-          return <line key={tx.id} x1={cx} y1={cy} x2={x} y2={y} stroke="currentColor" opacity="0.08" strokeWidth="0.5" />;
-        })}
-        <polygon points={polyPts} fill={palette[v]} fillOpacity="0.15" stroke={palette[v]} strokeWidth="1.4" />
-        {taxonomy.map((tx, i) => {
-          const [x, y] = pointFor(i, project.scores[tx.id]);
+    <>
+      <div className="vs-radar-wrap">
+        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height="auto" style={{ maxWidth: SIZE, overflow: 'visible' }} aria-hidden>
+          {[0.25, 0.5, 0.75, 1].map((p) => (
+            <circle key={p} cx={cx} cy={cy} r={R * p} fill="none" stroke="currentColor" opacity={p === 1 ? 0.14 : 0.06} strokeWidth="0.5" strokeDasharray={p < 1 ? '2 4' : undefined} />
+          ))}
+          <circle cx={cx} cy={cy} r={R * 0.68} fill="none" stroke={palette.accelerate} opacity="0.22" strokeDasharray="2 3" strokeWidth="0.6" />
+          <circle cx={cx} cy={cy} r={R * 0.42} fill="none" stroke={palette.rescue} opacity="0.22" strokeDasharray="2 3" strokeWidth="0.6" />
+          {taxonomy.map((tx, i) => {
+            const [x, y] = pointFor(i, 100);
+            return <line key={tx.id} x1={cx} y1={cy} x2={x} y2={y} stroke="currentColor" opacity="0.06" strokeWidth="0.5" />;
+          })}
+          <polygon points={polyPts} fill={palette[v]} fillOpacity="0.12" stroke={palette[v]} strokeWidth="1.35" strokeLinejoin="round" />
+          {taxonomy.map((tx, i) => {
+            const [x, y] = pointFor(i, project.scores[tx.id]);
+            const isFail = project.bucketFails?.includes(tx.id);
+            const vb = isFail
+              ? 'rescue'
+              : window.VS.verdictFor(project.scores[tx.id]);
+            return <circle key={tx.id} cx={x} cy={y} r="3.5" fill={palette[vb]} />;
+          })}
+          {taxonomy.map((tx, i) => {
+            const [vx, vy] = pointFor(i, 100);
+            return (
+              <circle
+                key={`corner-${tx.id}`}
+                cx={vx}
+                cy={vy}
+                r="4"
+                fill="var(--surface, #fff)"
+                stroke="currentColor"
+                strokeOpacity={0.35}
+                strokeWidth={1}
+              />
+            );
+          })}
+          {taxonomy.map((tx, i) => {
+            const a = angleFor(i);
+            const { nameX, nameY, scoreX, scoreY, ta } = cornerLabelLayout(a);
+            const isFail = project.bucketFails?.includes(tx.id);
+            const vb = isFail
+              ? 'rescue'
+              : window.VS.verdictFor(project.scores[tx.id]);
+            return (
+              <g key={tx.id}>
+                <text
+                  x={nameX}
+                  y={nameY}
+                  fontSize="10"
+                  textAnchor={ta}
+                  fill="currentColor"
+                  opacity="0.76"
+                  fontWeight="600"
+                >
+                  {tx.name}
+                </text>
+                <text
+                  x={scoreX}
+                  y={scoreY}
+                  fontSize="13"
+                  textAnchor={ta}
+                  fill={palette[vb]}
+                  fontWeight="700"
+                  fontVariantNumeric="tabular-nums"
+                >
+                  {project.scores[tx.id]}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      <div className="vs-radar-score-strip" role="list">
+        {taxonomy.map((tx) => {
+          const score = project.scores[tx.id];
           const isFail = project.bucketFails?.includes(tx.id);
-          const v = isFail
-            ? 'rescue'
-            : window.VS.verdictFor(project.scores[tx.id]);
-          return <circle key={tx.id} cx={x} cy={y} r="3" fill={palette[v]} />;
-        })}
-        {taxonomy.map((tx, i) => {
-          const [x, y] = labelFor(i);
-          const a = angleFor(i);
-          const anchor = Math.cos(a) > 0.3 ? 'start' : Math.cos(a) < -0.3 ? 'end' : 'middle';
-          const isFail = project.bucketFails?.includes(tx.id);
-          const v = isFail
-            ? 'rescue'
-            : window.VS.verdictFor(project.scores[tx.id]);
+          const vb = isFail ? 'rescue' : window.VS.verdictFor(score);
           return (
-            <g key={tx.id}>
-              <text x={x} y={y} fontSize="10" textAnchor={anchor} fill="currentColor" opacity="0.7" fontWeight="500">{tx.name}</text>
-              <text x={x} y={y + 12} fontSize="11" textAnchor={anchor} fill={palette[v]} fontWeight="600">{project.scores[tx.id]}</text>
-            </g>
+            <div key={tx.id} className="vs-radar-score-cell" role="listitem">
+              <span className="vs-radar-score-cell__name">{tx.name}</span>
+              <span className="vs-radar-score-cell__num" style={{ color: palette[vb] }}>{score}</span>
+            </div>
           );
         })}
-      </svg>
-    </div>
+      </div>
+    </>
   );
 }
 
