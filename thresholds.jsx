@@ -25,7 +25,7 @@ function ThresholdsView({ goBack, palette }) {
     { name:'Governance Attendance',     signal:'Sponsor Commitment',        bucket:'People',  type:'min_better', bandA:90,  bandB:75,  unit:'%' },
     { name:'Escalation Response Time',  signal:'Sponsor Commitment',        bucket:'People',  type:'max_better', bandA:24,  bandB:48,  unit:'hrs' },
     { name:'Critical Resource Avail.',  signal:'Team Availability',         bucket:'People',  type:'min_better', bandA:80,  bandB:60,  unit:'%' },
-    { name:'User Confidence Level',     signal:'Cultural Readiness',        bucket:'People',  type:'min_better', bandA:70,  bandB:50,  unit:'%' },
+    { name:'User Confidence Level',     signal:'Organisational Change Readiness',        bucket:'People',  type:'min_better', bandA:70,  bandB:50,  unit:'%' },
     { name:'User Adoption Incentives', signal:'User Adoption Readiness', bucket:'People', type:'categorical', bandA:'Yes - formal incentive', bandB:'Yes - team tracking', unit:'type' },
     { name:'Workload Impact',          signal:'User Adoption Readiness', bucket:'People', type:'categorical', bandA:'Yes - validated reduction', bandB:'Yes - projected reduction', unit:'type' },
     { name:'PM Experience',             signal:'Relevant Experience',       bucket:'People',  type:'min_better', bandA:2,   bandB:1,   unit:'programmes' },

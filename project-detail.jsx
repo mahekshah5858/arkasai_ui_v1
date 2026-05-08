@@ -8,14 +8,14 @@ function ProjectDetailView({ projects, setProjects, projectId, initialOpenSignal
   const [openSignal, setOpenSignal] = React.useState(
     initialOpenSignal || null
   );
-  const [signalViewMode, setSignalViewMode] = React.useState('detail');
+  const [signalViewMode, setSignalViewMode] = React.useState('board');
   const [signalBoardOpen, setSignalBoardOpen] = React.useState(null);
   const [answeredIds, setAnsweredIds] = React.useState(() => new Set());
 
   React.useEffect(() => {
     setOpenSignal(initialOpenSignal || null);
     setAnsweredIds(new Set());
-    setSignalViewMode('detail');
+    setSignalViewMode('board');
     setSignalBoardOpen(null);
   }, [projectId, initialOpenSignal]);
 
@@ -234,7 +234,7 @@ function ProjectDetailView({ projects, setProjects, projectId, initialOpenSignal
                 whiteSpace: 'nowrap',
               }}
             >
-              {signalViewMode === 'detail' ? 'Board view' : 'Detail view'}
+              {signalViewMode === 'detail' ? 'Executive view' : 'Detail view'}
             </button>
           </div>
         </div>
@@ -466,12 +466,20 @@ function Radar({ project, taxonomy, palette }) {
         <polygon points={polyPts} fill={palette[v]} fillOpacity="0.15" stroke={palette[v]} strokeWidth="1.4" />
         {taxonomy.map((tx, i) => {
           const [x, y] = pointFor(i, project.scores[tx.id]);
+          const isFail = project.bucketFails?.includes(tx.id);
+          const v = isFail
+            ? 'rescue'
+            : window.VS.verdictFor(project.scores[tx.id]);
           return <circle key={tx.id} cx={x} cy={y} r="3" fill={palette[v]} />;
         })}
         {taxonomy.map((tx, i) => {
           const [x, y] = labelFor(i);
           const a = angleFor(i);
           const anchor = Math.cos(a) > 0.3 ? 'start' : Math.cos(a) < -0.3 ? 'end' : 'middle';
+          const isFail = project.bucketFails?.includes(tx.id);
+          const v = isFail
+            ? 'rescue'
+            : window.VS.verdictFor(project.scores[tx.id]);
           return (
             <g key={tx.id}>
               <text x={x} y={y} fontSize="10" textAnchor={anchor} fill="currentColor" opacity="0.7" fontWeight="500">{tx.name}</text>
@@ -781,8 +789,8 @@ function Progression({ project, palette }) {
           <span style={{textAlign:'center'}}>Strategy</span>
         </div>
 
-        <div style={{ fontSize:'0.65rem', opacity:0.35, textAlign:'right', marginBottom:'0.5rem' }}>
-          Bucket cells show count of signals not at Verity Pass · click to expand
+        <div style={{ fontSize:'0.72rem', opacity:0.35, textAlign:'right', marginBottom:'0.5rem' }}>
+          Numbers show signals below Verity Pass · click to open
         </div>
 
         {/* Snapshot rows */}
@@ -1995,14 +2003,28 @@ function BoardView({
       }}>
 
         {BUCKETS.map((bkt, bi) => {
-          const score = project.scores[bkt.id];
-          const bv = score >= 68 ? 'accelerate' : score >= 42 ? 'rescue' : 'kill';
+          const score   = project.scores[bkt.id];
+          const isFail  = project.bucketFails?.includes(bkt.id);
+          const bv      = isFail
+            ? 'rescue'
+            : score >= 68 ? 'accelerate'
+            : score >= 42 ? 'rescue'
+            : 'kill';
+
+          const hoverText = isFail
+            ? `${bkt.label} · ${score} — Governance FAIL. A critical signal scored Red from team-submitted evidence. Score cannot override a bucket FAIL. Verdict is capped at Rescue until resolved.`
+            : score >= 68
+            ? `${bkt.label} · ${score} — Accelerate band. All groups performing well.`
+            : score >= 42
+            ? `${bkt.label} · ${score} — Rescue band. At least one group needs attention.`
+            : `${bkt.label} · ${score} — Kill band. Systemic issues in this category.`;
           return (
-            <div key={bkt.id} style={{
+            <div key={bkt.id} title={hoverText} style={{
               padding: '8px 10px',
               borderRight: bi < 3 ? '1px solid color-mix(in oklch, currentColor 10%, transparent)' : 'none',
               borderBottom: '1px solid color-mix(in oklch, currentColor 12%, transparent)',
               background: 'color-mix(in oklch, currentColor 3%, transparent)',
+              cursor: 'default',
             }}>
               <div style={{
                 fontSize: '0.72rem',
@@ -2018,8 +2040,27 @@ function BoardView({
                 fontSize: '1.25rem',
                 fontWeight: 700,
                 color: palette[bv],
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
               }}>
                 {score}
+                {isFail && (
+                  <span style={{
+                    fontSize: '0.55rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    color: palette.kill,
+                    border: `1px solid ${palette.kill}`,
+                    padding: '1px 4px',
+                    borderRadius: '2px',
+                    lineHeight: 1,
+                    flexShrink: 0,
+                  }}>
+                    FAIL
+                  </span>
+                )}
               </div>
             </div>
           );
@@ -2393,7 +2434,12 @@ function SignalTable({
       {taxonomy.map((tx) => {
         const score = project.scores[tx.id];
         const weight = project.weights[tx.id];
-        const v = score >= 68 ? 'accelerate' : score >= 42 ? 'rescue' : 'kill';
+        const isFail = project.bucketFails?.includes(tx.id);
+        const v = isFail
+          ? 'rescue'
+          : score >= 68 ? 'accelerate'
+            : score >= 42 ? 'rescue'
+              : 'kill';
         const groupsForBucket = SG[tx.id] || [];
 
         const namesInGroups = new Set(

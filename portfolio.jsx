@@ -763,10 +763,14 @@ function Heatmap({ projects, taxonomy, goToProject, palette }) {
             </div>
             {taxonomy.map((tx) => {
               const s = p.scores[tx.id];
+              const isFail = p.bucketFails?.includes(tx.id);
+              const cellColor = isFail
+                ? palette.rescue
+                : palette[window.VS.verdictFor(p.scores[tx.id])];
               return (
                 <div key={tx.id} className="vs-heatmap-cell"
                      style={{
-                       background: heatColor(s, palette),
+                       background: cellColor,
                        color: s < 45 ? '#fff' : 'inherit',
                      }}>
                   {s}

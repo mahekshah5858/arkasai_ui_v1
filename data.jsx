@@ -150,8 +150,8 @@ const PORTFOLIO_INTELLIGENCE = {
     {
       id: 'roi',
       severity: 'amber',
-      title: 'ROI not independently validated — four programmes',
-      body: 'Four programmes carry return assumptions that came from the programme teams themselves. FraudLens projects 3.2x. None has been reviewed by an external party. This is a capital allocation decision risk.',
+      title: 'Capital allocation needs external validation',
+      body: 'Four programmes are carrying unvalidated ROI assumptions ahead of the next budget cycle. The figures came from the programme teams. An independent review of all four — one exercise, one external party — would take two weeks and remove the risk from the portfolio.',
       programmes: [
         { id: 'P1', name: 'FraudLens AI', signal: 'Value Case Strength' },
         { id: 'P2', name: 'Client 360', signal: 'Value Case Strength' },
@@ -732,7 +732,12 @@ const VERDICTS = {
   kill: { id: 'kill', label: 'Kill', short: 'Kill', min: 0 },
 };
 
-function verdictFor(score) {
+function verdictFor(score, bucketFails) {
+  // FAIL rule: any bucket FAIL caps verdict at RESCUE
+  if (bucketFails && bucketFails.length > 0) {
+    if (score >= 42) return 'rescue';
+    return 'kill';
+  }
   if (score >= 68) return 'accelerate';
   if (score >= 42) return 'rescue';
   return 'kill';
@@ -802,10 +807,10 @@ const RAW_PROJECTS = [
           strategy:{red:[],amber:['Value Case Strength','Exit and Kill Criteria'],green:[]},
         },
         progression_brain: {
-          tech:     'CI/CD is running and no critical vulnerabilities are open. Test coverage at 88% and technical debt are both below threshold. Architecture has not been independently reviewed. Technology is functional but not yet confirmed production-ready.',
-          process:  'No programme board is in place. Governance has not been formally structured. Milestone delivery is below threshold and reporting is informal. The process foundation needs to be built.',
-          people:   'Sponsor attendance is not yet tracked via Calendar — commitment is unverified. Team capability is present but adoption readiness and change management have not been assessed. People signals are largely unconfirmed.',
-          strategy: 'The mandate document exists but the ROI has not been validated and exit criteria are informal. Strategic alignment is implied rather than confirmed. The value case needs strengthening.',
+          tech:     'Test coverage at 88% and technical debt are both below threshold — connect SonarCloud and GitHub to get live baselines before the next evaluation. Commission an independent architecture review this month. Technology is functional but cannot be confirmed production-ready without live data.',
+          process:  'No programme board exists and governance has not been formally structured. Establish a programme board with a C-suite chair this week. Without it, escalations have no owner and blockers will not resolve.',
+          people:   'Sponsor attendance is not tracked via Calendar — connect Google Calendar this week to establish a live baseline. Commission a capability assessment and adoption readiness review before the next evaluation.',
+          strategy: 'ROI has not been validated and exit criteria are informal. Commission an independent ROI review and formalise kill criteria in the programme charter before the next evaluation.',
         },
         changes:['Documents only. Process below minimum. Adoption Failure triggered.'],
       },
@@ -819,10 +824,10 @@ const RAW_PROJECTS = [
           strategy:{red:[],amber:['Value Case Strength','Exit and Kill Criteria'],green:[]},
         },
         progression_brain: {
-          tech:     'Test coverage has improved but remains below the 90% threshold. Technical debt is being actively managed. Architecture is still internally reviewed only. Engineering is strengthening but not yet at the highest standard.',
+          tech:     'Test coverage remains below the 90% threshold and architecture is still internally reviewed only. Set a test coverage sprint target and commission an independent architecture review before the next evaluation.',
           process:  null,
-          people:   'Sponsor attendance is improving. Adoption readiness and knowledge transfer preparation are underway but not yet complete.',
-          strategy: 'ROI remains unvalidated. Strategic alignment is strengthening. Exit criteria have been formalised this cycle.',
+          people:   'Sponsor attendance is improving but adoption readiness and knowledge transfer preparation have not yet started. Initiate both workstreams this month — they cannot be deferred to go-live.',
+          strategy: 'ROI remains unvalidated. Commission the external validation this sprint — it is the one action that will close this gap at the next evaluation.',
         },
         changes:['Programme board formed. CTO Sarah Chen confirmed as chair.','GitHub connected. CI/CD and vulnerability data live.'],
       },
@@ -836,10 +841,10 @@ const RAW_PROJECTS = [
           strategy:{red:[],amber:['Value Case Strength'],green:['Mandate Clarity','Strategic Alignment']},
         },
         progression_brain: {
-          tech:     'Test coverage sits at 88% — still below the 90% threshold. Technical debt is at 8% with an active management plan in place. All other technology signals are passing. The gap is narrowing.',
+          tech:     'Test coverage at 88% is 2 points below the Verity Pass threshold of 90%. Set a single sprint target to close the gap. Technical debt at 8% is actively managed — maintain the Jira plan.',
           process:  null,
           people:   null,
-          strategy: 'ROI is the only remaining gap — the 3.2x estimate has not been independently validated. All other strategy signals are passing. Independent validation is the one action needed.',
+          strategy: 'ROI validation is the one remaining action. Commission the independent review with the finance team before the next capital allocation decision — this single action closes the signal.',
         },
         changes:['Jira and Calendar connected. Sponsor attendance confirmed at 94%.','Score approaching Accelerate threshold.'],
       },
@@ -849,14 +854,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:[],amber:['Engineering Health','Technical Debt Level'],green:['Security Posture','Integration Health','Operational Readiness','Architecture Fitness']},
           process:{red:[],amber:[],green:['Governance Structure','Milestone Delivery Rate','Risk Management Health','Rollback and Contingency']},
-          people:{red:[],amber:[],green:['Sponsor Commitment','Team Capability','Cultural Readiness','Knowledge Transfer Readiness']},
+          people:{red:[],amber:[],green:['Sponsor Commitment','Team Capability','Organisational Change Readiness','Knowledge Transfer Readiness']},
           strategy:{red:[],amber:['Value Case Strength'],green:['Mandate Clarity','Strategic Alignment','Roadmap Credibility','Exit and Kill Criteria']},
         },
         progression_brain: {
-          tech:     'Test coverage at 88% and technical debt at 8% are the two signals below the highest threshold. Both are actively managed. All other technology signals are fully passing.',
+          tech:     'Test coverage at 88% and technical debt at 8% are the two remaining gaps. Both are actively managed. Set a sprint target to reach 90% coverage before go-live.',
           process:  null,
           people:   null,
-          strategy: 'ROI validation is the one remaining gap. The 3.2x return estimate has not been independently reviewed. All other strategy signals are fully passing.',
+          strategy: 'Commission the independent ROI validation with the finance team before the next capital review. This is the only remaining action in the strategy bucket.',
         },
         changes:['All buckets above 3.0. Pen test completed December 2025.','Score crosses Accelerate threshold at 3.8.'],
       },
@@ -934,10 +939,10 @@ const RAW_PROJECTS = [
           strategy:{red:[],amber:['Value Case Strength','Mandate Clarity'],green:[]},
         },
         progression_brain: {
-          tech:     'CI/CD is below threshold, test coverage is at 78%, and architecture has not been independently reviewed. Only basic security is in place. All technology criteria are below the required standard at first evaluation.',
-          process:  'No programme board exists. No formal risk register. Milestone delivery is unreliable. The process foundation does not exist.',
-          people:   'Sponsor attendance is not yet confirmed from Calendar. Team capability has gaps and stakeholder alignment is not formally mapped. People signals are largely unverified.',
-          strategy: 'Mandate exists but the value case is unvalidated and exit criteria are informal. Strategic alignment is implied. The programme lacks a confirmed strategic foundation.',
+          tech:     'CI/CD is below threshold, test coverage is at 78%, and architecture has not been independently reviewed. Connect GitHub and SonarCloud to get live baselines. Commission an independent architecture review before Phase 2 begins.',
+          process:  'No programme board exists and no formal risk register is in place. Establish a programme board with a C-suite chair this week and create a risk register before the next evaluation.',
+          people:   'Sponsor attendance is not confirmed from Calendar — connect Google Calendar this week. Commission a formal capability assessment and stakeholder map before the next evaluation.',
+          strategy: 'Value case is unvalidated and exit criteria are informal. Commission an independent ROI review and formalise kill criteria in the programme charter before the next evaluation.',
         },
         changes:['Documents only. Tech and Process below minimum.'],
       },
@@ -951,10 +956,10 @@ const RAW_PROJECTS = [
           strategy:{red:[],amber:['Value Case Strength'],green:['Mandate Clarity']},
         },
         progression_brain: {
-          tech:     'Connectors are now live — CI/CD, test coverage, and vulnerabilities are confirmed from GitHub. Engineering has improved but most criteria remain below threshold. The live data is revealing the true picture.',
-          process:  'Programme board has formed and Mark Davis is confirmed as PM. Milestone delivery is improving. Process is establishing itself.',
-          people:   'Sponsor attendance is confirmed at 91% via Calendar — strong engagement. Team capability gaps remain. Adoption readiness has not yet been assessed.',
-          strategy: 'ROI remains unvalidated. Strategic alignment is strengthening. Exit criteria are being formalised.',
+          tech:     'Live data now confirms CI/CD at 91% and test coverage at 78% — both below threshold. Prioritise test coverage to 90% in the next sprint. Commission an independent architecture review before go-live.',
+          process:  'Programme board has formed and Mark Davis is confirmed as PM. Milestone delivery is improving — maintain the weekly governance cadence and resolve any blockers at the next board session.',
+          people:   'Sponsor attendance confirmed at 91% from Calendar — strong. Close team capability gaps by assigning named owners to the skill gap plan before the next evaluation.',
+          strategy: 'ROI remains unvalidated. Commission the external review this sprint — it is the one action that will close this gap.',
         },
         changes:['All connectors activated. Sponsor attendance 91% confirmed via Calendar.','Score improved significantly.'],
       },
@@ -968,10 +973,10 @@ const RAW_PROJECTS = [
           strategy:{red:[],amber:['Value Case Strength'],green:['Mandate Clarity','Strategic Alignment']},
         },
         progression_brain: {
-          tech:     'CI/CD is at 93% and security is improving. Most criteria are still below the highest threshold but the trajectory is positive. Technology is at its best position in the programme\'s history.',
-          process:  'Milestone delivery is at 88% and the governance board is functioning well. This is the strongest process position the programme has reached.',
-          people:   'Sponsor attendance is at 91% and CMO Rachel Torres is personally engaged. This is the strongest people position in the programme\'s history.',
-          strategy: 'ROI remains unvalidated and strategic alignment is not fully confirmed. These are the persistent gaps even at the programme\'s peak.',
+          tech:     'CI/CD at 93% is the best technology position this programme has reached. Close the remaining criteria gaps before go-live — this is the window to do it.',
+          process:  'Milestone delivery at 88% and governance board functioning well — the strongest process position in the programme\'s history. Maintain the weekly cadence and protect the governance structure through go-live.',
+          people:   'Sponsor attendance at 91% and CMO Rachel Torres personally engaged — the strongest people position in the programme\'s history. Formalise a succession plan for the sponsor role before go-live to protect this position.',
+          strategy: 'Commission the independent ROI validation before the next board review. This is the one action that has been outstanding for three evaluation cycles.',
         },
         changes:['CMO Rachel Torres attending 91% of sessions.','Milestone delivery at 88%. Approaching Accelerate threshold.'],
       },
@@ -985,10 +990,10 @@ const RAW_PROJECTS = [
           strategy:{red:[],amber:['Value Case Strength'],green:['Mandate Clarity']},
         },
         progression_brain: {
-          tech:     'Technology signals are unchanged from October 2025 — the same engineering gaps persist. Technology is not the story this cycle.',
-          process:  'Milestone delivery has collapsed to 61% with 7 open blockers in Jira. No programme board is in place to resolve blockers. Process has broken down since the sponsor change in February.',
-          people:   'Google Calendar shows sponsor attendance at 48% — down from 91% in October. CMO Rachel Torres changed roles in February. Accountability has been delegated to a deputy. No replacement sponsor has been formally appointed.',
-          strategy: 'ROI remains unvalidated and the algorithmic impact assessment — required for customer-facing financial recommendations — has not been initiated. Two strategy gaps that were tolerable are now urgent.',
+          tech:     'Technology signals are unchanged from October 2025. Address the integration gaps and bring CI/CD to 95% — technology is not the urgent problem but it cannot be neglected while the delivery and sponsorship crisis is managed.',
+          process:  'Milestone delivery has collapsed to 61% with 7 open blockers in Jira. Convene an emergency delivery review this week. Assign owners to every blocker and produce a recovery plan. Every week without intervention the backlog grows.',
+          people:   'Calendar confirms sponsor attendance at 48% — down from 91% in October. Appoint a named C-suite replacement this week. Every governance session without a sponsor accelerates this programme\'s deterioration.',
+          strategy: 'Initiate the algorithmic impact assessment immediately — it is required before a customer-facing AI recommendation system can go live and has not been started. Commission the ROI validation in parallel.',
         },
         changes:['CMO Rachel Torres changed roles February 2026. No replacement sponsor appointed.','Calendar shows attendance collapsed to 48%. Milestone delivery at 61%.','People bucket now FAIL. Score dropped 0.8 in one cycle.'],
       },
@@ -1062,14 +1067,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:[],amber:['Engineering Health','Integration Health'],green:['Security Posture']},
           process:{red:['Governance Structure','Risk Management Health','Dependency Health','Quality Gate Adherence','Change Control Discipline','Reporting Cadence','Rollback and Contingency'],amber:['Milestone Delivery Rate'],green:[]},
-          people:{red:['Sponsor Commitment','Cultural Readiness'],amber:['Team Capability','Knowledge Transfer Readiness'],green:[]},
+          people:{red:['Sponsor Commitment','Organisational Change Readiness'],amber:['Team Capability','Knowledge Transfer Readiness'],green:[]},
           strategy:{red:['Mandate Clarity','Exit and Kill Criteria'],amber:['Value Case Strength'],green:[]},
         },
         progression_brain: {
-          tech:     'CI/CD is at 97% and zero vulnerabilities are open — the engineering team is producing excellent code. Architecture is not independently reviewed, integrations are incomplete, and operational readiness is absent.',
-          process:  'No programme board, no risk register, no change control, no reporting cadence. The process does not exist. Every process signal is failing at first evaluation.',
-          people:   'Sponsor attendance is at 42% and accountability is delegated. The legal team has not been involved in design. Knowledge transfer has not started. People signals are failing across the board.',
-          strategy: 'No board resolution, no independently validated ROI, no exit criteria. The programme has no strategic foundation.',
+          tech:     'Engineering is the strongest signal in this programme — CI/CD at 97% and zero vulnerabilities confirmed from GitHub. Preserve the engineering team. Commission an independent architecture review and complete the integration backlog before any go-live decision.',
+          process:  'No programme board, no risk register, no change control, no reporting cadence. Establish a programme board with a C-suite chair this week. Without it, no other process improvement will hold.',
+          people:   'Sponsor attendance is at 42% — convene a commitment review meeting with the General Counsel this week. Consult the legal team immediately — they are the primary users of this system and have not been involved.',
+          strategy: 'No board resolution, no validated ROI, no exit criteria. Escalate to the General Counsel and obtain a board resolution before any further investment is committed.',
         },
         changes:['Technology strong — CI/CD 97%, test coverage 92%.','No programme board, no risk register, no change control. Adoption Failure.'],
       },
@@ -1079,14 +1084,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:[],amber:['Engineering Health','Integration Health'],green:['Security Posture']},
           process:{red:['Governance Structure','Risk Management Health','Dependency Health','Quality Gate Adherence','Change Control Discipline','Reporting Cadence','Rollback and Contingency'],amber:['Milestone Delivery Rate'],green:[]},
-          people:{red:['Sponsor Commitment','Cultural Readiness'],amber:['Team Capability'],green:[]},
+          people:{red:['Sponsor Commitment','Organisational Change Readiness'],amber:['Team Capability'],green:[]},
           strategy:{red:['Mandate Clarity','Exit and Kill Criteria'],amber:['Value Case Strength'],green:[]},
         },
         progression_brain: {
-          tech:     'Technology is broadly unchanged from June 2025. Engineering remains strong. Operational gaps persist. No meaningful technology improvement in two months.',
-          process:  'A business case has been submitted and strategy has improved slightly. But governance remains absent. This is the second consecutive Rescue flag with no intervention from leadership.',
-          people:   'No change in sponsor commitment or team situation. The people signals that were failing in June are still failing.',
-          strategy: 'The business case has improved the value case marginally. All other strategy signals remain failing. No exit criteria, no mandate document.',
+          tech:     'Technology is unchanged from June 2025. Engineering remains strong but operational gaps persist. Commission an independent architecture review and address the integration backlog — both are required before any go-live.',
+          process:  'This is the second consecutive Rescue flag with no governance intervention. Establish a programme board this week. Two Rescue flags without action is a governance failure, not a programme failure.',
+          people:   'Sponsor commitment and team situation are unchanged since June. Request an urgent meeting with the General Counsel and begin legal team consultation — this cannot wait for a third evaluation cycle.',
+          strategy: 'Formalise kill criteria and obtain a board resolution before the next evaluation. The programme cannot continue building without a formal mandate.',
         },
         changes:['Business case submitted. Strategy improves slightly.','Governance unchanged. Second Rescue flag raised.'],
       },
@@ -1096,14 +1101,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:[],amber:['Engineering Health','Integration Health'],green:['Security Posture']},
           process:{red:['Governance Structure','Risk Management Health','Dependency Health','Change Control Discipline','Reporting Cadence','Rollback and Contingency'],amber:['Milestone Delivery Rate','Quality Gate Adherence'],green:[]},
-          people:{red:['Sponsor Commitment','Cultural Readiness'],amber:['Team Capability'],green:[]},
+          people:{red:['Sponsor Commitment','Organisational Change Readiness'],amber:['Team Capability'],green:[]},
           strategy:{red:['Mandate Clarity','Exit and Kill Criteria'],amber:['Value Case Strength'],green:[]},
         },
         progression_brain: {
-          tech:     'Technology is unchanged for four months. The engineering team continues to produce strong code while everything around them deteriorates.',
-          process:  'This is the third consecutive Rescue flag. No governance intervention has been made. Risk management, change control, quality gates, and reporting are all absent. Nothing has changed.',
-          people:   'All people signals are unchanged and failing. The legal team has still not been consulted. No sponsor engagement improvement.',
-          strategy: 'Unchanged from August 2025. No strategic progress across three evaluation cycles.',
+          tech:     'Technology is unchanged for four months. Halt delivery work and commission an independent architecture review before continuing. The engineering team is producing quality code with no governance to guide what gets built.',
+          process:  'Third consecutive Rescue flag with no intervention. Escalate immediately to the General Counsel and CTO. Risk management, change control, quality gates, and reporting are all absent — the programme is operating without any process discipline.',
+          people:   'All people signals unchanged and failing for three cycles. The legal team has still not been consulted. Halt delivery and conduct a mandatory legal team consultation before the next sprint begins.',
+          strategy: 'No strategic progress in three evaluation cycles. Obtain a board resolution or stop the programme. Continuing to build without a board mandate is a governance failure.',
         },
         changes:['Third consecutive Rescue flag. No governance intervention made.','Score unchanged. Risk growing.'],
       },
@@ -1113,14 +1118,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:['Integration Health'],amber:['Engineering Health'],green:['Security Posture']},
           process:{red:['Governance Structure','Milestone Delivery Rate','Risk Management Health','Dependency Health','Quality Gate Adherence','Change Control Discipline','Reporting Cadence','Rollback and Contingency'],amber:[],green:[]},
-          people:{red:['Sponsor Commitment','Cultural Readiness','Knowledge Transfer Readiness','Team Availability'],amber:['Team Capability'],green:[]},
-          strategy:{red:['Mandate Clarity','Exit and Kill Criteria','Innovation Classification'],amber:['Value Case Strength'],green:[]},
+          people:{red:['Sponsor Commitment','Organisational Change Readiness','Knowledge Transfer Readiness','Team Availability'],amber:['Team Capability'],green:[]},
+          strategy:{red:['Mandate Clarity','Exit and Kill Criteria'],amber:['Value Case Strength'],green:[]},
         },
         progression_brain: {
-          tech:     'CI/CD is still at 97% — the engineering team continues to deliver quality code. But integrations are at 60% complete and technical debt has reached 18%. The technical foundation is eroding.',
-          process:  'All eight process signals are failing. Four evaluation cycles with no governance, no risk management, no change control. The process failure is total.',
-          people:   'All people signals are failing. The legal team has been built a system without being involved. No knowledge transfer, no BAU team, no organisational change readiness.',
-          strategy: 'No board resolution, no validated ROI, no exit criteria. AI Risk and Compliance is fully failing — no legal review, no AIA, no MRM, no bias testing.',
+          tech:     'Technical debt has reached 18% and 40% of integrations are not in production. Preserve the engineering team and codebase if the programme is wound down — they are the most valuable assets. Do not deploy the system in its current state.',
+          process:  'All eight process signals are failing after four evaluation cycles. Stop further delivery work. Commission a formal programme review with the General Counsel before any decision is made about continuation.',
+          people:   'All people signals failing. The legal team was not involved in building a system they are expected to use. Conduct a legal team impact assessment before making any wind-down or continuation decision.',
+          strategy: 'No legal review, no AIA, no MRM, and no bias testing on a system that analyses legal contracts. Do not deploy. Initiate a formal wind-down plan and capital recovery assessment.',
         },
         changes:['Overall score below 2.0. Decision moves to Kill.','Four rescue flags over 10 months. No action taken.'],
       },
@@ -1184,7 +1189,7 @@ const RAW_PROJECTS = [
     overall4: 3.34,
     buckets4: { tech: 3.2385, process: 3.8125, people: 3.8125, strategy: 2.6462 },
     score: 88,
-    verdict: 'accelerate',
+    verdict: 'rescue',
     scores: { tech: 88, process: 96, people: 96, strategy: 74 },
     weights: { tech: 0.25, process: 0.25, people: 0.25, strategy: 0.25 },
     trendAnchors: [[0,46],[3,57],[6,59],[9,88]],
@@ -1199,10 +1204,10 @@ const RAW_PROJECTS = [
           strategy:{red:['Regulatory Engagement Quality','Deadline Compliance Risk'],amber:['Value Case Strength'],green:['Mandate Clarity']},
         },
         progression_brain: {
-          tech:     'No connectors are active — all technology data is from documents only. Engineering health is below threshold and operational readiness has not been assessed. The true technology picture is not yet visible.',
-          process:  'Programme board is not yet formalised and milestone delivery is below threshold. Process foundations are being established.',
-          people:   'Sponsor attendance is not yet confirmed from Calendar. Team capability is present but not confirmed with live data.',
-          strategy: 'Three regulatory signals are Red — Regulatory Engagement, Deadline Compliance, and Interpretation Risk. No formal regulator contact has been made. The DORA deadline is 14 months away.',
+          tech:     'No connectors are active — connect GitHub, Jira, and Datadog before the next evaluation. Technology cannot be confirmed without live data. Commission an independent architecture review in parallel.',
+          process:  'Programme board is not yet formalised. Establish the board with CRO Marcus Webb as chair before the next evaluation. Milestone delivery cannot be governed without a functioning board.',
+          people:   'Sponsor attendance is not confirmed from Calendar — connect Google Calendar this week. Confirm KPMG specialist availability before the next evaluation.',
+          strategy: 'Three regulatory signals are Red at the first evaluation — Regulatory Engagement, Deadline Compliance, and Interpretation Risk. Initiate formal regulator contact with the Federal Reserve and OCC this week. The DORA deadline is 14 months away — that timeline shrinks faster than expected.',
         },
         changes:['Documents only. Tech and Process below minimum.'],
       },
@@ -1216,10 +1221,10 @@ const RAW_PROJECTS = [
           strategy:{red:['Regulatory Engagement Quality','Deadline Compliance Risk','Interpretation Risk'],amber:['Value Case Strength'],green:['Mandate Clarity']},
         },
         progression_brain: {
-          tech:     'GitHub and Jira are now connected — CI/CD, test coverage, and milestone data are confirmed live. Technology has improved significantly. Integration gaps are now visible.',
-          process:  'Governance board has formed with CRO Marcus Webb as chair. Milestone delivery is improving. Process is establishing strongly.',
-          people:   'Sponsor attendance is confirmed at 93% via Calendar. KPMG regulatory technology specialists are in place.',
-          strategy: 'Three regulatory signals remain Red. No regulator contact has been made despite these signals being flagged at first evaluation. The DORA deadline is now 11 months away.',
+          tech:     'Live data now confirms CI/CD and test coverage. Integration gaps are now visible — complete the remaining integrations before the next evaluation. Close the open critical vulnerability this sprint.',
+          process:  'Governance board formed with CRO as chair and milestone delivery is improving. Maintain the weekly cadence and add regulatory engagement as a standing agenda item at every board session.',
+          people:   'Sponsor attendance confirmed at 93% from Calendar. KPMG specialists are in place. Protect both through go-live — they are the programme\'s strongest assets.',
+          strategy: 'Three regulatory signals are still Red despite being flagged at the first evaluation. Initiate formal Federal Reserve and OCC contact this week. The DORA deadline is now 11 months away — the window for course correction is narrowing.',
         },
         changes:['All connectors activated. Regulatory engagement signals answered — no regulator contact confirmed.','Strategy at minimum threshold.'],
       },
@@ -1233,10 +1238,10 @@ const RAW_PROJECTS = [
           strategy:{red:['Regulatory Engagement Quality','Deadline Compliance Risk','Interpretation Risk'],amber:['Value Case Strength'],green:['Mandate Clarity']},
         },
         progression_brain: {
-          tech:     'Technology continues to improve with all connectors active. Integration gaps persist. Engineering health is at its strongest position.',
+          tech:     'Technology is improving with all connectors active. Complete the remaining integration gaps and close the open vulnerability. With 9 months to the DORA deadline, engineering cannot be the reason for a delay.',
           process:  null,
-          people:   'Knowledge transfer is amber — the BAU team is identified but no overlap period is planned. All other people signals are passing.',
-          strategy: 'Three regulatory signals are still Red. This is the third evaluation cycle with no regulatory engagement initiated. The DORA deadline is now 9 months away.',
+          people:   'Start BAU team training this month — do not wait for the final quarter. The KT plan is ready but engagement has not started.',
+          strategy: 'Three regulatory signals are still Red for the third consecutive evaluation. Initiate formal Federal Reserve and OCC contact this week. The DORA deadline is now 9 months away — each cycle of inaction reduces the margin for correction.',
         },
         changes:['Tech and Process improving. Strategy unchanged.','Regulatory risk growing. DORA deadline now 9 months away.','No regulator engagement initiated.'],
       },
@@ -1250,10 +1255,10 @@ const RAW_PROJECTS = [
           strategy:{red:['Regulatory Engagement Quality','Deadline Compliance Risk','Interpretation Risk'],amber:['Value Case Strength'],green:['Mandate Clarity','Strategic Alignment']},
         },
         progression_brain: {
-          tech:     'One critical vulnerability is open. Integration monitoring has a gap. BAU team is identified but not trained. Technology is strong but not fully passing.',
+          tech:     'Close the open critical vulnerability this sprint and complete the remaining integration monitoring gap. Start BAU team training this week — 8 weeks to the DORA deadline means handover preparation cannot wait.',
           process:  null,
-          people:   'Knowledge transfer remains amber — BAU team identified but no overlap period is planned. All other people signals are fully passing.',
-          strategy: 'Three regulatory signals are Red and the AI Risk signal is also Red — the legal review cannot be completed without confirmed regulatory interpretation. The DORA deadline is 8 weeks away. This is the fourth evaluation cycle with no regulatory engagement.',
+          people:   'Start BAU overlap engagement this week. The KT plan is documented but engagement has not started — with 8 weeks to deadline this is an urgent gap.',
+          strategy: 'CRO Marcus Webb and General Counsel must initiate formal contact with the Federal Reserve and OCC this week. This single action unblocks the legal review, the AIA, and the interpretation confirmation — and removes the FAIL flag from this bucket. Every week of inaction reduces the time available to act on the regulatory response.',
         },
         changes:['Score of 3.3 masks 3 critical Red signals in Strategy.','No regulator contact made in 12 months. DORA deadline 8 weeks away.','Programme tracking 2 weeks late. 3 open ICT questions. No legal counsel engaged.'],
       },
@@ -1284,13 +1289,16 @@ const RAW_PROJECTS = [
       'Engineering Health AMBER (CI/CD 94% GitHub); Architecture GREEN; Security GREEN (pen test Jan 2026); Governance GREEN (CRO chairs board); Milestone AMBER (tracking 2 weeks late); Sponsor GREEN (93% Calendar); Mandate GREEN (board resolution); Regulatory Engagement RED (no regulator contact in 12 months — team input); Deadline Compliance RED (DORA deadline 8 weeks, 2 weeks late — team input); Interpretation Risk RED (3 open ICT questions, no legal counsel — team input); AI Risk RED (legal review blocked by regulatory interpretation gap).',
     executive_card: {
       about: 'RegRadar is automating Meridian\'s DORA compliance monitoring and reporting ahead of the June 2026 regulatory deadline. It replaces a manual quarterly process that consumed three weeks of the regulatory team each cycle. Under Verity Signal evaluation since April 2025. CRO Marcus Webb is primary sponsor. KPMG Regulatory Technology is the SI. $2.8M approved budget. Lisa Thompson is PM.',
-      happening: 'Score 88. Technology, Process and People are all confirmed strong via live connectors — Tech 88, Process 96, People 96. Three buckets performing at or near Accelerate level. The problem is in Strategy where Governance and Risk scores 40 — the lowest group score in the portfolio. Three regulatory signals are Red.',
+
+      happening: 'Score 88 — the highest in the portfolio. Technology, Process and People are all confirmed strong via live connectors. Despite the score, the verdict is Rescue. The Strategy bucket has a governance FAIL flag from three critical regulatory signals submitted by the programme team. A score of 88 cannot override a bucket FAIL.',
+
       matters: {
-        text: 'AI Risk and Compliance is now Red alongside the three regulatory signals. The legal review cannot be completed because the regulatory interpretation is unconfirmed. DORA deadline is eight weeks away. The programme has built to an interpretation no regulator has approved.',
+        text: 'No formal contact has been made with the Federal Reserve or OCC in twelve months of building a DORA compliance platform. The deadline is eight weeks away and the programme is tracking two weeks late. The legal review and algorithmic impact assessment are both blocked until the regulatory interpretation is confirmed. If the interpretation is wrong, there is no time to correct it.',
         signals: ['Regulatory Engagement Quality', 'AI Risk and Compliance'],
       },
+
       must_happen: {
-        text: 'This Accelerate verdict is conditional. CRO Marcus Webb and General Counsel must initiate formal regulator contact with the Federal Reserve and OCC this week. Without it, the next evaluation will move this programme from Accelerate to Rescue.',
+        text: 'CRO Marcus Webb and General Counsel must jointly initiate formal contact with the Federal Reserve and OCC this week. This single action unblocks the legal review, the AIA, and the regulatory interpretation — and removes the FAIL flag. When the three regulatory signals move to Green, the verdict returns to Accelerate immediately.',
         signal: 'Regulatory Engagement Quality',
       },
     },
@@ -1328,14 +1336,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:['Integration Health','Operational Readiness'],amber:['Engineering Health','Model / Product Maturity'],green:[]},
           process:{red:['Governance Structure','Milestone Delivery Rate','Risk Management Health'],amber:['Reporting Cadence'],green:[]},
-          people:{red:['Sponsor Commitment','Cultural Readiness','Knowledge Transfer Readiness'],amber:['Team Capability'],green:[]},
+          people:{red:['Sponsor Commitment','Organisational Change Readiness','Knowledge Transfer Readiness'],amber:['Team Capability'],green:[]},
           strategy:{red:['Mandate Clarity','Exit and Kill Criteria'],amber:['Value Case Strength'],green:[]},
         },
         progression_brain: {
-          tech:     'No connectors are active — all technology data is from documents only. Integration health is Red, operational readiness is not in place, and most criteria are below threshold.',
-          process:  'No programme board exists. No milestone delivery tracking. Risk management is absent. Process has broken down following the departure of the original sponsor.',
-          people:   'The original sponsor has left with no replacement appointed. Attendance is not being tracked. Knowledge transfer, adoption readiness, and change readiness are all failing. The programme has no people governance.',
-          strategy: 'Mandate exists but the ROI is unvalidated, exit criteria are absent, and strategic alignment is not confirmed. The strategic foundation has deteriorated with the governance.',
+          tech:     'No connectors are active — connect GitHub and Datadog before the next evaluation. Technology cannot be confirmed without live data. Integration health is Red — prioritise integration recovery alongside connector activation.',
+          process:  'No programme board exists and process has broken down following the sponsor departure. Establish a programme board with a C-suite chair this week. Without it the programme cannot recover.',
+          people:   'The sponsor has left with no replacement appointed. Appoint a named C-suite replacement immediately — every week without a sponsor the programme deteriorates further. Attendance tracking via Calendar must begin this week.',
+          strategy: 'ROI is unvalidated and exit criteria are absent. Formalise kill criteria and commission an ROI review before the next evaluation. The strategic foundation must be rebuilt alongside the governance.',
         },
         changes:['Kill flag. Original sponsor left. No governance. Adoption Failure triggered.','No programme board. No connectors. Documents only.'],
       },
@@ -1345,14 +1353,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:['Integration Health'],amber:['Engineering Health','Model / Product Maturity'],green:['Security Posture']},
           process:{red:['Milestone Delivery Rate'],amber:['Governance Structure','Risk Management Health'],green:[]},
-          people:{red:['Cultural Readiness'],amber:['Team Capability','Knowledge Transfer Readiness'],green:['Sponsor Commitment']},
+          people:{red:['Organisational Change Readiness'],amber:['Team Capability','Knowledge Transfer Readiness'],green:['Sponsor Commitment']},
           strategy:{red:['Exit and Kill Criteria'],amber:['Value Case Strength','Mandate Clarity'],green:[]},
         },
         progression_brain: {
-          tech:     'GitHub is now connected — CI/CD and vulnerability data are live. Technology is improving with real data visible. Integration gaps and operational readiness gaps remain.',
-          process:  'Governance is beginning to form. Milestone delivery is still below threshold. CHRO Linda Park\'s intervention has not yet reached process maturity.',
-          people:   'CHRO Linda Park has taken personal sponsorship — attendance is improving and accountability is confirmed personal. People signals are beginning to recover. Adoption Failure is still active.',
-          strategy: 'Strategy signals are improving with CHRO engagement. Exit criteria are being formalised. ROI remains unvalidated.',
+          tech:     'GitHub is connected and live data is now visible. Integration gaps are confirmed — resolve the integration backlog and complete operational readiness work before the next evaluation.',
+          process:  'Governance is beginning to form. Establish formal milestone tracking in Jira and weekly risk register reviews before the next evaluation — process maturity cannot depend on the CHRO\'s personal intervention alone.',
+          people:   'CHRO Linda Park has taken personal sponsorship and attendance is improving. Resolve the Adoption Failure flag this cycle — it is the most important action for the next evaluation.',
+          strategy: 'Commission the independent ROI validation this sprint. Formalise exit criteria in the programme charter. Both are within reach this cycle.',
         },
         changes:['CHRO Linda Park assumed sponsorship. GitHub connected.','People bucket recovering. Adoption Failure still active.'],
       },
@@ -1362,14 +1370,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:[],amber:['Engineering Health','Integration Health','Model / Product Maturity'],green:['Security Posture','Operational Readiness']},
           process:{red:[],amber:['Milestone Delivery Rate'],green:['Governance Structure','Risk Management Health']},
-          people:{red:[],amber:['Cultural Readiness','Knowledge Transfer Readiness'],green:['Sponsor Commitment','Team Capability']},
+          people:{red:[],amber:['Organisational Change Readiness','Knowledge Transfer Readiness'],green:['Sponsor Commitment','Team Capability']},
           strategy:{red:[],amber:['Value Case Strength','Exit and Kill Criteria'],green:['Mandate Clarity']},
         },
         progression_brain: {
-          tech:     'All connectors are active and technology is improving significantly. Operational readiness and technical debt remain amber. Everything else is passing.',
+          tech:     'Operational readiness and technical debt are the two remaining gaps. Complete the runbooks and on-call rota before the next evaluation. Set a debt reduction target to reach 5% before go-live.',
           process:  null,
-          people:   'Google Calendar confirms 100% attendance since July 2025. Adoption Failure is resolved. Knowledge transfer and adoption readiness are the two remaining amber signals.',
-          strategy: 'ROI remains unvalidated and exit criteria are being formalised. All other strategy signals are passing.',
+          people:   'Google Calendar confirms 100% attendance since July — the programme has recovered from Kill. Start BAU team engagement and complete knowledge transfer planning before the next evaluation.',
+          strategy: 'Commission the independent ROI validation before the next capital review. Formalise the remaining exit criteria — both are the last strategy actions before Accelerate is within reach.',
         },
         changes:['Programme board formed. Ryan Cooper appointed as PM.','All connectors active. Calendar confirms Linda Park attending 100% of sessions.','Adoption Failure resolved.'],
       },
@@ -1379,14 +1387,14 @@ const RAW_PROJECTS = [
         highlights:{
           tech:{red:[],amber:['Engineering Health','Technical Debt Level','Integration Health'],green:['Security Posture','Operational Readiness','Architecture Fitness']},
           process:{red:[],amber:[],green:['Governance Structure','Milestone Delivery Rate','Risk Management Health','Rollback and Contingency']},
-          people:{red:[],amber:['Knowledge Transfer Readiness'],green:['Sponsor Commitment','Team Capability','Cultural Readiness','Team Availability']},
+          people:{red:[],amber:['Knowledge Transfer Readiness'],green:['Sponsor Commitment','Team Capability','Organisational Change Readiness','Team Availability']},
           strategy:{red:[],amber:['Value Case Strength'],green:['Mandate Clarity','Strategic Alignment','Roadmap Credibility','Exit and Kill Criteria']},
         },
         progression_brain: {
-          tech:     'Engineering health and technical debt remain amber — CI/CD at 93% and debt at 10%. All other technology signals are fully passing.',
+          tech:     'Close the test coverage gap from 81% to 90% and reduce technical debt from 10% toward 5%. Both are achievable in two sprints — complete them before go-live.',
           process:  null,
-          people:   'Knowledge transfer is the one amber signal — BAU team is identified but training has not started. All other people signals are fully passing, including 100% Calendar attendance.',
-          strategy: 'Value Case Strength and Investment Sizing remain amber — ROI is not independently validated and no external budget benchmarking has been completed. All other strategy signals are passing.',
+          people:   'Start BAU team training this week — it is the only people action remaining. CHRO Linda Park\'s 100% attendance is the programme\'s strongest governance signal. Protect it through go-live.',
+          strategy: 'Commission the independent ROI validation and external budget benchmarking before the next capital review. Both are outstanding for multiple cycles — close them before go-live.',
         },
         changes:['Kill to Accelerate in 12 months.','CHRO Linda Park 100% attendance confirmed via Calendar every session since July 2025.','All 4 buckets above 3.0. Score crosses Accelerate at 3.6.'],
       },
@@ -1700,6 +1708,25 @@ const PROJECTS = RAW_PROJECTS.map((raw) => {
     signalEvidence,
     ...rest
   } = raw;
+
+  const rawSignals = (typeof PROJECT_SIGNALS !== 'undefined'
+    ? PROJECT_SIGNALS[raw.id] : []) || [];
+
+  const bucketFails = ['tech','process','people','strategy'].filter(bucket => {
+    const criticalSigNames = (TAXONOMY.find(t => t.id === bucket)?.signals || [])
+      .filter(sg => sg.isCritical)
+      .map(sg => sg.name);
+    return rawSignals.some(s =>
+      criticalSigNames.includes(s.signal_name) &&
+      s.result === 'RED' &&
+      (s.criteria || []).some(c =>
+        c.result === 'RED' &&
+        ['form_critical','form_noncritical']
+          .includes(c.evidence?.evidence_quality)
+      )
+    );
+  });
+
   return {
     ...rest,
     scores,
@@ -1709,7 +1736,8 @@ const PROJECTS = RAW_PROJECTS.map((raw) => {
     trendAnchors: trendAnchors || [],
     snapshotDates: snapshotDates || [],
     score: raw.score ?? toDisplayScore(raw.overall4),
-    verdict: raw.verdict ?? verdictFor(toDisplayScore(raw.overall4)),
+    verdict: raw.verdict ?? verdictFor(toDisplayScore(raw.overall4), bucketFails),
+    bucketFails,
     company: COMPANY.name,
     programme_manager,
     primary_sponsor,
