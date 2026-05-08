@@ -75,9 +75,12 @@ function ThresholdsView({ goBack, palette }) {
     width:'4.5rem', padding:'0.2rem 0.4rem',
     border:'1px solid currentColor', borderRadius:'2px',
     background:'transparent', color:'inherit',
-    fontFamily:'JetBrains Mono, monospace',
+    fontFamily:'var(--font-mono, ui-monospace, monospace)',
     fontSize:'0.82rem', textAlign:'right', opacity:0.9,
   };
+
+  const critGridCols =
+    'minmax(100px, 2fr) minmax(88px, 1.6fr) minmax(56px, 0.85fr) minmax(64px, 0.75fr) minmax(180px, 1.15fr) minmax(180px, 1.15fr) minmax(40px, 3.25rem)';
 
   const rowStyle = {
     display:'grid', alignItems:'center',
@@ -287,10 +290,16 @@ function ThresholdsView({ goBack, palette }) {
           </p>
         </div>
 
+        <div style={{
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          marginBottom: '0.25rem',
+        }}>
+          <div style={{ minWidth: 720 }}>
         {/* Column headers */}
         <div style={{
           display:'grid',
-          gridTemplateColumns:'2fr 1.8fr 0.9fr 0.7fr 4.5rem 4.5rem 3.5rem',
+          gridTemplateColumns: critGridCols,
           gap:'0.5rem 1rem',
           fontSize:'0.68rem', fontWeight:700,
           textTransform:'uppercase', letterSpacing:'0.06em',
@@ -332,32 +341,34 @@ function ThresholdsView({ goBack, palette }) {
               {bktCriteria.map(cr => (
                 <div key={cr.i} style={{
                   display:'grid',
-                  gridTemplateColumns:'2fr 1.8fr 0.9fr 0.7fr 4.5rem 4.5rem 3.5rem',
+                  gridTemplateColumns: critGridCols,
                   gap:'0.5rem 1rem',
                   alignItems:'center',
                   padding:'0.5rem 0',
                   borderBottom:'1px solid currentColor',
                   fontSize:'0.83rem',
                 }}>
-                  <div>{cr.name}</div>
-                  <div style={{ opacity:0.5, fontSize:'0.78rem' }}>
+                  <div style={{ minWidth: 0 }}>{cr.name}</div>
+                  <div style={{ opacity:0.5, fontSize:'0.78rem', minWidth: 0 }}>
                     {cr.signal}
                   </div>
-                  <div style={{ opacity:0.5, fontSize:'0.78rem' }}>
+                  <div style={{ opacity:0.5, fontSize:'0.78rem', minWidth: 0 }}>
                     {cr.bucket}
                   </div>
                   <div style={{
                     fontSize:'0.72rem', opacity:0.5,
                     textTransform:'uppercase', letterSpacing:'0.03em',
+                    minWidth: 0,
                   }}>
                     {cr.type === 'min_better' ? '↑ Higher'
                       : cr.type === 'max_better' ? '↓ Lower'
+                      : cr.type === 'categorical' ? 'Text'
                       : 'Periodic'}
                   </div>
-                  <div style={{ textAlign:'right' }}>
+                  <div style={{ textAlign:'right', minWidth: 0 }}>
                     {cr.type === 'periodic' ? (
                       <span style={{
-                        fontFamily:'JetBrains Mono, monospace',
+                        fontFamily:'var(--font-mono, ui-monospace, monospace)',
                         fontSize:'0.8rem', opacity:0.55,
                       }}>
                         {cr.bandA}mo
@@ -366,29 +377,37 @@ function ThresholdsView({ goBack, palette }) {
                       <input
                         type="text"
                         value={cr.bandA}
+                        title={cr.bandA}
                         onChange={e => handleCriterion(cr.i,'bandA',e.target.value)}
                         style={{
                           ...inputStyle,
-                          width: '10.5rem',
+                          width: '100%',
+                          minWidth: 0,
+                          boxSizing: 'border-box',
                           textAlign: 'left',
                           fontFamily: 'inherit',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
                         }}
                       />
                     ) : (
-                      <input
-                        type="number"
-                        step={cr.unit === '%' ? 1 : 0.1}
-                        min="0"
-                        value={cr.bandA}
-                        onChange={e => handleCriterion(cr.i,'bandA',e.target.value)}
-                        style={inputStyle}
-                      />
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', minWidth: 0 }}>
+                        <input
+                          type="number"
+                          step={cr.unit === '%' ? 1 : 0.1}
+                          min="0"
+                          value={cr.bandA}
+                          title={String(cr.bandA)}
+                          onChange={e => handleCriterion(cr.i,'bandA',e.target.value)}
+                          style={inputStyle}
+                        />
+                      </div>
                     )}
                   </div>
-                  <div style={{ textAlign:'right' }}>
+                  <div style={{ textAlign:'right', minWidth: 0 }}>
                     {cr.type === 'periodic' ? (
                       <span style={{
-                        fontFamily:'JetBrains Mono, monospace',
+                        fontFamily:'var(--font-mono, ui-monospace, monospace)',
                         fontSize:'0.8rem', opacity:0.55,
                       }}>
                         {cr.bandB}mo
@@ -397,23 +416,31 @@ function ThresholdsView({ goBack, palette }) {
                       <input
                         type="text"
                         value={cr.bandB}
+                        title={cr.bandB}
                         onChange={e => handleCriterion(cr.i,'bandB',e.target.value)}
                         style={{
                           ...inputStyle,
-                          width: '10.5rem',
+                          width: '100%',
+                          minWidth: 0,
+                          boxSizing: 'border-box',
                           textAlign: 'left',
                           fontFamily: 'inherit',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
                         }}
                       />
                     ) : (
-                      <input
-                        type="number"
-                        step={cr.unit === '%' ? 1 : 0.1}
-                        min="0"
-                        value={cr.bandB}
-                        onChange={e => handleCriterion(cr.i,'bandB',e.target.value)}
-                        style={inputStyle}
-                      />
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', minWidth: 0 }}>
+                        <input
+                          type="number"
+                          step={cr.unit === '%' ? 1 : 0.1}
+                          min="0"
+                          value={cr.bandB}
+                          title={String(cr.bandB)}
+                          onChange={e => handleCriterion(cr.i,'bandB',e.target.value)}
+                          style={inputStyle}
+                        />
+                      </div>
                     )}
                   </div>
                   <div style={{
@@ -426,6 +453,9 @@ function ThresholdsView({ goBack, palette }) {
             </div>
           );
         })}
+
+          </div>
+        </div>
 
       </section>
 

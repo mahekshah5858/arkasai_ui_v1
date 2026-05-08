@@ -581,10 +581,10 @@ function TaxonomyView({ goBack, palette }) {
       <div style={{ display:'flex', gap:'0.5rem', marginBottom:'2.5rem', flexWrap:'wrap' }}>
         {[{ id:'all', label:'All buckets' }, ...BUCKETS].map((b) => (
           <button key={b.id} type="button" onClick={() => setFilterBucket(b.id)} style={{
-            border:'1px solid currentColor',
+            border: `1px solid ${filterBucket === b.id ? 'var(--arkas-navy)' : 'currentColor'}`,
             borderRadius:'3px',
-            background: filterBucket === b.id ? 'currentColor' : 'transparent',
-            color: filterBucket === b.id ? 'var(--vs-bg)' : 'inherit',
+            background: filterBucket === b.id ? 'var(--arkas-navy)' : 'transparent',
+            color: filterBucket === b.id ? '#ffffff' : 'inherit',
             padding:'0.3rem 0.8rem',
             fontSize:'0.78rem',
             fontWeight:600,
