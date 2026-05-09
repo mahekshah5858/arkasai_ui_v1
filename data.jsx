@@ -1176,7 +1176,7 @@ const RAW_PROJECTS = [
     spend: 2.8,
     started: 'Apr 2025',
     headline:
-      'RegRadar scores 88 — the highest in the portfolio — but carries a Rescue verdict. Three critical regulatory signals are Red and the Strategy bucket has a governance FAIL. DORA deadline is 8 weeks away.',
+      'RegRadar scores 88 but carries a Rescue verdict. Three critical regulatory signals are Red and the Strategy bucket has a governance FAIL. DORA deadline is 8 weeks away.',
     description:
       'Automated AI-powered DORA compliance monitoring and reporting. Replacing manual quarterly reporting with continuous automated assessment. Regulatory deadline: June 2026.',
     programme_manager: 'Lisa Thompson',
@@ -1276,7 +1276,7 @@ const RAW_PROJECTS = [
       tfeas: 'document', uadopt: 'team', ucvalid: 'document', airisk: 'team',
     },
     exec_summary: {
-      cxo_note: 'RegRadar scores 88 — the highest in the portfolio — but carries a Rescue verdict. The Strategy bucket has a governance FAIL. CRO Marcus Webb and General Counsel must initiate formal regulator contact this week.',
+      cxo_note: 'RegRadar scores 88 but carries a Rescue verdict. The Strategy bucket has a governance FAIL. CRO Marcus Webb and General Counsel must initiate formal regulator contact this week.',
       actions: [
         { who: 'CRO Marcus Webb', what: 'Initiate formal engagement with Federal Reserve and OCC. Confirm DORA interpretation.', when: 'This week' },
         { who: 'General Counsel', what: 'Engage legal counsel on the 3 open ICT framework interpretation questions.', when: 'Within 7 days' },
@@ -1290,7 +1290,7 @@ const RAW_PROJECTS = [
     executive_card: {
       about: 'RegRadar is automating Meridian\'s DORA compliance monitoring and reporting ahead of the June 2026 regulatory deadline. It replaces a manual quarterly process that consumed three weeks of the regulatory team each cycle. Under Verity Signal evaluation since April 2025. CRO Marcus Webb is primary sponsor. KPMG Regulatory Technology is the SI. $2.8M approved budget. Lisa Thompson is PM.',
 
-      happening: 'Score 88 — the highest in the portfolio. Technology, Process and People are all confirmed strong via live connectors. Despite the score, the verdict is Rescue. The Strategy bucket has a governance FAIL flag from three critical regulatory signals submitted by the programme team. A score of 88 cannot override a bucket FAIL.',
+      happening: 'Score 88. Technology, Process and People are all confirmed strong via live connectors. Despite the score, the verdict is Rescue. The Strategy bucket has a governance FAIL flag from three critical regulatory signals submitted by the programme team. A score of 88 cannot override a bucket FAIL.',
 
       matters: {
         text: 'No formal contact has been made with the Federal Reserve or OCC in twelve months of building a DORA compliance platform. The deadline is eight weeks away and the programme is tracking two weeks late. The legal review and algorithmic impact assessment are both blocked until the regulatory interpretation is confirmed. If the interpretation is wrong, there is no time to correct it.',
