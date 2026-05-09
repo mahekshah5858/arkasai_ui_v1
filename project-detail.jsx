@@ -819,8 +819,9 @@ function Progression({ project, palette }) {
                  : delta<0 ? palette.kill : 'inherit' },
         ].map(({ label, value, color }) => (
           <div key={label}>
-            <div style={{ fontSize:'0.7rem', opacity:0.45,
-                          textTransform:'uppercase', letterSpacing:'0.05em',
+            <div style={{ fontSize:'0.72rem', fontWeight:600,
+                          color:'var(--ink-3)',
+                          textTransform:'uppercase', letterSpacing:'0.06em',
                           marginBottom:'0.2rem' }}>
               {label}
             </div>
@@ -840,11 +841,12 @@ function Progression({ project, palette }) {
           display:'grid',
           gridTemplateColumns:'5rem 3.5rem 4rem 1fr 4rem 4rem 4rem 4rem',
           gap:'0.25rem 0.75rem',
-          padding:'0 0 0.4rem',
-          borderBottom:'1px solid currentColor',
-          fontSize:'0.65rem', fontWeight:700,
-          textTransform:'uppercase', letterSpacing:'0.06em',
-          opacity:0.4, whiteSpace:'nowrap',
+          padding:'0 0 0.45rem',
+          borderBottom:'1px solid var(--line)',
+          color:'var(--ink-3)',
+          fontSize:'0.7rem', fontWeight:700,
+          textTransform:'uppercase', letterSpacing:'0.07em',
+          whiteSpace:'nowrap',
         }}>
           <span>Date</span>
           <span style={{textAlign:'center'}}>Delta</span>
@@ -856,7 +858,11 @@ function Progression({ project, palette }) {
           <span style={{textAlign:'center'}}>Strategy</span>
         </div>
 
-        <div style={{ fontSize:'0.72rem', opacity:0.35, textAlign:'right', marginBottom:'0.5rem' }}>
+        <div style={{
+          fontSize:'0.75rem', fontWeight:500,
+          color:'var(--muted)', textAlign:'right',
+          marginBottom:'0.5rem', marginTop:'0.2rem',
+        }}>
           Numbers show signals below Verity Pass · click to open
         </div>
 
