@@ -825,7 +825,7 @@ function Progression({ project, palette }) {
                           marginBottom:'0.2rem' }}>
               {label}
             </div>
-            <div style={{ fontWeight:600, fontSize:'1rem',
+            <div style={{ fontWeight:700, fontSize:'1.05rem',
                           color: color || 'inherit' }}>
               {value}
             </div>
@@ -840,11 +840,11 @@ function Progression({ project, palette }) {
         <div style={{
           display:'grid',
           gridTemplateColumns:'5rem 3.5rem 4rem 1fr 4rem 4rem 4rem 4rem',
-          gap:'0.25rem 0.75rem',
+          gap:'0.35rem 0.85rem',
           padding:'0 0 0.45rem',
           borderBottom:'1px solid var(--line)',
-          color:'var(--ink-3)',
-          fontSize:'0.7rem', fontWeight:700,
+          color:'var(--ink-2)',
+          fontSize:'0.75rem', fontWeight:700,
           textTransform:'uppercase', letterSpacing:'0.07em',
           whiteSpace:'nowrap',
         }}>
@@ -859,8 +859,8 @@ function Progression({ project, palette }) {
         </div>
 
         <div style={{
-          fontSize:'0.75rem', fontWeight:500,
-          color:'var(--muted)', textAlign:'right',
+          fontSize:'0.8125rem', fontWeight:500,
+          color:'var(--ink-3)', textAlign:'right',
           marginBottom:'0.5rem', marginTop:'0.2rem',
         }}>
           Numbers show signals below Verity Pass · click to open
@@ -876,27 +876,30 @@ function Progression({ project, palette }) {
             <div key={i} style={{
               display:'grid',
               gridTemplateColumns:'5rem 3.5rem 4rem 1fr 4rem 4rem 4rem 4rem',
-              gap:'0.25rem 0.75rem',
-              padding:'0.8rem 0',
-              borderBottom: isLast ? 'none' : '1px solid currentColor',
+              gap:'0.35rem 0.85rem',
+              padding:'0.95rem 0',
+              borderBottom: isLast ? 'none' : '1px solid var(--line)',
               alignItems:'start',
-              opacity: isLast ? 1 : 0.55,
+              color:'var(--ink)',
             }}>
 
               {/* Date */}
-              <div style={{ fontFamily:'JetBrains Mono, monospace',
-                            fontSize:'0.78rem' }}>
+              <div style={{
+                fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums',
+                fontSize:'0.875rem', fontWeight:600, color:'var(--ink)',
+              }}>
                 {snap.date}
               </div>
 
               {/* Delta */}
               <div style={{
                 textAlign:'center',
-                fontFamily:'JetBrains Mono, monospace',
-                fontSize:'0.78rem',
-                color: snap.delta > 0 ? palette.accelerate
-                     : snap.delta < 0 ? palette.kill : 'inherit',
-                opacity: snap.delta != null ? 1 : 0.3,
+                fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums',
+                fontSize:'0.875rem', fontWeight:600,
+                color: snap.delta != null
+                  ? (snap.delta > 0 ? palette.accelerate
+                     : snap.delta < 0 ? palette.kill : 'var(--ink-2)')
+                  : 'var(--muted)',
               }}>
                 {snap.delta != null
                   ? (snap.delta > 0 ? `+${snap.delta}` : snap.delta)
@@ -905,14 +908,17 @@ function Progression({ project, palette }) {
 
               {/* Overall score */}
               <div style={{
-                fontFamily:'JetBrains Mono, monospace',
-                fontSize:'0.82rem', fontWeight:600,
+                fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums',
+                fontSize:'0.9375rem', fontWeight:700,
                 color: palette[verdict],
               }}>
                 {score}
-                <div style={{ fontSize:'0.65rem', fontWeight:400,
-                              textTransform:'uppercase',
-                              letterSpacing:'0.04em', opacity:0.7 }}>
+                <div style={{
+                  fontSize:'0.6875rem', fontWeight:600,
+                  color:'var(--ink-3)',
+                  textTransform:'uppercase',
+                  letterSpacing:'0.05em',
+                }}>
                   {verdict === 'accelerate' ? 'Acc'
                    : verdict === 'rescue' ? 'Rescue' : 'Kill'}
                 </div>
@@ -920,18 +926,23 @@ function Progression({ project, palette }) {
 
               {/* Label + change bullets */}
               <div>
-                <div style={{ fontSize:'0.8rem', fontWeight:600,
-                              marginBottom:'0.25rem' }}>
+                <div style={{
+                  fontSize:'0.9rem', fontWeight:600,
+                  marginBottom:'0.3rem', color:'var(--ink)',
+                }}>
                   {snap.label}
                 </div>
                 {(snap.changes || []).map((ch, ci) => (
                   <div key={ci} style={{
-                    fontSize:'0.75rem', opacity:0.6,
-                    lineHeight:1.5, paddingLeft:'0.75rem',
+                    fontSize:'0.8125rem', fontWeight:500,
+                    color:'var(--ink-3)',
+                    lineHeight:1.55, paddingLeft:'0.85rem',
                     position:'relative',
                   }}>
-                    <span style={{ position:'absolute', left:0,
-                                   opacity:0.4 }}>·</span>
+                    <span style={{
+                      position:'absolute', left:0, color:'var(--muted)',
+                      fontWeight:700,
+                    }}>·</span>
                     {ch}
                   </div>
                 ))}
@@ -948,11 +959,12 @@ function Progression({ project, palette }) {
                     style={{ textAlign:'center', position:'relative' }}
                   >
                     <div style={{
-                      fontFamily: 'JetBrains Mono, monospace',
-                      fontSize: '0.85rem',
+                      fontFamily: 'var(--font-mono)',
+                      fontVariantNumeric: 'tabular-nums',
+                      fontSize: '0.9375rem',
                       fontWeight: 700,
                       color: count === null
-                        ? 'inherit'
+                        ? 'var(--muted)'
                         : count === 0
                         ? palette.accelerate
                         : count <= 2
@@ -961,7 +973,6 @@ function Progression({ project, palette }) {
                       cursor: h ? 'pointer' : 'default',
                       textDecoration: h ? 'underline' : 'none',
                       textDecorationStyle: 'dotted',
-                      opacity: count === null ? 0.35 : 1,
                     }}>
                       <span
                         onClick={() => setActivePanel(
