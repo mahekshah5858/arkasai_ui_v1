@@ -115,26 +115,34 @@ function PortfolioIntelligence({ goToProject, palette }) {
     );
   }
 
+  function intelPillStyle(severity) {
+    const c = severity === 'red' ? palette.kill : palette.rescue;
+    return {
+      fontSize: '0.72rem',
+      fontWeight: 600,
+      padding: '2px 9px',
+      borderRadius: '3px',
+      border: `1px solid ${c}`,
+      color: c,
+      background: 'transparent',
+      cursor: 'pointer',
+      fontFamily: 'inherit',
+      transition: 'opacity 0.15s',
+      textAlign: 'left',
+    };
+  }
+
   function ProgrammePill({ prog, severity }) {
-    const borderColor = severity === 'red' ? palette.kill : palette.rescue;
-    const textColor = severity === 'red' ? palette.kill : palette.rescue;
+    const base = intelPillStyle(severity);
 
     return (
       <button
-        onClick={() => goToProject(prog.id, prog.signal)}
-        title={`Open ${prog.name} → ${prog.signal}`}
+        type="button"
+        onClick={() => goToProject(prog.id)}
+        title={`Open ${prog.name}`}
         style={{
-          fontSize: '0.72rem',
-          fontWeight: 600,
-          padding: '2px 9px',
-          borderRadius: '3px',
-          border: `1px solid ${borderColor}`,
-          color: textColor,
-          background: 'transparent',
-          cursor: 'pointer',
-          fontFamily: 'inherit',
+          ...base,
           whiteSpace: 'nowrap',
-          transition: 'opacity 0.15s',
         }}
         onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.65')}
         onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
@@ -142,6 +150,57 @@ function PortfolioIntelligence({ goToProject, palette }) {
         {prog.name}
       </button>
     );
+  }
+
+  function SignalRow({ signalName, prog, accentColor, pillTitle, affectedNames }) {
+    const multi = affectedNames.length > 1;
+
+    return (
+      <button
+        type="button"
+        className="vs-portfolio-intel-signal-row"
+        onClick={() => goToProject(prog.id, signalName)}
+        title={pillTitle}
+        style={{ borderLeftColor: accentColor }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.opacity = '0.9';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.opacity = '1';
+        }}
+      >
+        <span className="vs-portfolio-intel-signal-row__name">{signalName}</span>
+        {multi ? (
+          <span className="vs-portfolio-intel-signal-row__meta">{affectedNames.join(' · ')}</span>
+        ) : null}
+      </button>
+    );
+  }
+
+  function signalsForProg(prog) {
+    if (Array.isArray(prog.signals) && prog.signals.length > 0) return prog.signals;
+    return prog.signal ? [prog.signal] : [];
+  }
+
+  /** One pill per distinct signal name; click opens first affected programme’s signal detail. */
+  function uniqueSignalsForRisk(risk) {
+    const byName = new Map();
+    for (const prog of risk.programmes) {
+      for (const signalName of signalsForProg(prog)) {
+        if (!byName.has(signalName)) {
+          byName.set(signalName, { prog, names: [] });
+        }
+        byName.get(signalName).names.push(prog.name);
+      }
+    }
+    return Array.from(byName.entries()).map(([signalName, { prog, names }]) => {
+      const affectedNames = [...new Set(names)];
+      const pillTitle =
+        affectedNames.length > 1
+          ? `${signalName} — affects: ${affectedNames.join(', ')}. Open ${prog.name} → ${signalName}`
+          : `Open ${prog.name} → ${signalName}`;
+      return { signalName, prog, pillTitle, affectedNames };
+    });
   }
 
   return (
@@ -215,22 +274,52 @@ function PortfolioIntelligence({ goToProject, palette }) {
               {risk.body}
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-              <span
-                style={{
-                  fontSize: '0.68rem',
-                  fontWeight: 600,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  opacity: 0.4,
-                  marginRight: '0.25rem',
-                }}
-              >
-                Affects
-              </span>
-              {risk.programmes.map((prog) => (
-                <ProgrammePill key={prog.id} prog={prog} severity={risk.severity} />
-              ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                <span
+                  style={{
+                    fontSize: '0.68rem',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    opacity: 0.4,
+                    marginRight: '0.25rem',
+                  }}
+                >
+                  Affects
+                </span>
+                {risk.programmes.map((prog) => (
+                  <ProgrammePill key={prog.id} prog={prog} severity={risk.severity} />
+                ))}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <span
+                  style={{
+                    fontSize: '0.68rem',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    opacity: 0.4,
+                    marginRight: '0.15rem',
+                    paddingTop: '3px',
+                    flexShrink: 0,
+                  }}
+                >
+                  Signals
+                </span>
+                <div className="vs-portfolio-intel-signals-stack">
+                  {uniqueSignalsForRisk(risk).map(({ signalName, prog, pillTitle, affectedNames }) => (
+                    <SignalRow
+                      key={signalName}
+                      signalName={signalName}
+                      prog={prog}
+                      accentColor={accentColor}
+                      pillTitle={pillTitle}
+                      affectedNames={affectedNames}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         );

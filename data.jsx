@@ -134,7 +134,16 @@ const PORTFOLIO_INTELLIGENCE = {
       title: 'Regulatory exposure — eight weeks to deadline',
       body: 'RegRadar has built a DORA compliance platform for 12 months without confirming its interpretation with the Federal Reserve or OCC. The deadline is 8 weeks away. If the interpretation is wrong, there is no time to correct it.',
       programmes: [
-        { id: 'P4', name: 'RegRadar', signal: 'Regulatory Engagement Quality' },
+        {
+          id: 'P4',
+          name: 'RegRadar',
+          signal: 'Regulatory Engagement Quality',
+          signals: [
+            'Regulatory Engagement Quality',
+            'Deadline Compliance Risk',
+            'Interpretation Risk',
+          ],
+        },
       ],
     },
     {

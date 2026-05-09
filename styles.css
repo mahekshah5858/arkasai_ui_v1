@@ -348,6 +348,50 @@ button { font-family: inherit; cursor: pointer; }
   height: 100%;
 }
 
+.vs-portfolio-intel-signals-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.vs-portfolio-intel-signal-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  margin: 0;
+  padding: 0.4rem 0.55rem 0.42rem 0.6rem;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  background: color-mix(in oklch, var(--line-2), transparent 72%);
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  border-radius: 0 8px 8px 0;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.vs-portfolio-intel-signal-row:hover {
+  background: color-mix(in oklch, var(--bg-2) 62%, transparent);
+}
+
+.vs-portfolio-intel-signal-row__name {
+  font-size: 0.76rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.vs-portfolio-intel-signal-row__meta {
+  font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--ink-3);
+}
+
 /* ── Verdict rollup cards ────────────────────────────────── */
 .vs-rollup {
   display: grid;
