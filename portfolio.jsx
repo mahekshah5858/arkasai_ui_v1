@@ -329,6 +329,21 @@ function PortfolioIntelligence({ goToProject, palette }) {
 }
 
 function PortfolioBubbleChart({ projects, palette, goToProject }) {
+  const [p6LiveScore, setP6LiveScore] = React.useState(
+    typeof window !== 'undefined' && window.VS._p6LiveScore != null
+      ? window.VS._p6LiveScore
+      : null
+  );
+
+  React.useEffect(() => {
+    function onAnswered() {
+      setP6LiveScore(
+        window.VS._p6LiveScore != null ? window.VS._p6LiveScore : null
+      );
+    }
+    window.addEventListener('vs-p6-answered', onAnswered);
+    return () => window.removeEventListener('vs-p6-answered', onAnswered);
+  }, []);
 
   const W = 1000;
   const H = 420;
@@ -380,19 +395,22 @@ function PortfolioBubbleChart({ projects, palette, goToProject }) {
   const rescueColor    = 'rgba(138,75,0,0.05)';
   const accelColor     = 'rgba(29,107,59,0.06)';
 
-  // Build bubble data
-  const bubbles = projects
-    .filter(p => !p.is_demo)
-    .map(p => ({
-      id:     p.id,
-      name:   p.name,
-      score:  p.score,
-      traj:   getTrajectory(p),
-      r:      getBubbleR(p.spend),
-      verdict: p.verdict,
-      color:  palette[p.verdict],
-      spend:  p.spend,
-    }));
+  function displayScore(project) {
+    if (project.is_demo && p6LiveScore != null) return p6LiveScore;
+    return project.score;
+  }
+
+  // Build bubble data — include demo programmes once added via the intake flow
+  const bubbles = projects.map((p) => ({
+    id:      p.id,
+    name:    p.name,
+    score:   displayScore(p),
+    traj:    getTrajectory(p),
+    r:       getBubbleR(p.spend),
+    verdict: p.verdict,
+    color:   palette[p.verdict],
+    spend:   p.spend,
+  }));
 
   // Deterministic layout pass to avoid overlaps (kept simple for easy revert).
   const laidOut = React.useMemo(() => {
